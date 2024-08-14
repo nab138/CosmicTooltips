@@ -4,22 +4,18 @@
   "name": "${mod_name}",
   "description": "${mod_desc}",
   "authors": [
-    "YOU :D"
+    "nab138"
   ],
   "entrypoints": {
-    "preInit": [
-      "org.example.exmod.ExampleModPreinit"
-    ],
-    "init": [
-      "org.example.exmod.ExampleMod"
-    ]
+    "preInit": [],
+    "init": []
   },
   "mixins": [
-    "example.mixins.json"
+    "cosmictooltips.mixins.json"
   ],
   "dependencies": {
     "cosmic-reach": ">=0.1.44",
     "puzzle-loader": ">=1.1.0"
   },
-  "accessManipulator": "example_mod.manipulator"
+  "accessManipulator": "cosmic_tooltips.manipulator"
 }
