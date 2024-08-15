@@ -1,12 +1,10 @@
 package me.nabdev.cosmictooltips.mixins;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.llamalad7.mixinextras.sugar.Local;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.ItemCatalog;
-import finalforeach.cosmicreach.items.ItemSlot;
 import finalforeach.cosmicreach.items.ItemStack;
 import finalforeach.cosmicreach.ui.FontRenderer;
 import finalforeach.cosmicreach.ui.UIElement;
@@ -16,7 +14,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ItemCatalog.class)
 public class ItemCatalogMixin {

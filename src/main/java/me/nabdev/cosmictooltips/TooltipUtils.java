@@ -3,10 +3,7 @@ package me.nabdev.cosmictooltips;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import finalforeach.cosmicreach.gamestates.GameState;
-import finalforeach.cosmicreach.ui.FontRenderer;
 import finalforeach.cosmicreach.ui.UIElement;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class TooltipUtils {
     public static UIElement tooltip;
