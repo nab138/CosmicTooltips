@@ -1,5 +1,6 @@
 package me.nabdev.cosmictooltips.mixins;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -10,13 +11,16 @@ import finalforeach.cosmicreach.ui.FontRenderer;
 import finalforeach.cosmicreach.ui.UIElement;
 import me.nabdev.cosmictooltips.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemCatalog.class)
-public class ItemCatalogMixin {
+public abstract class ItemCatalogMixin {
+    @Shadow public abstract boolean isShown();
+
     @Unique
     private Vector2 cosmicTooltips$dim;
 
@@ -61,4 +65,13 @@ public class ItemCatalogMixin {
         }
     }
 
+    @Inject(method="render", at = @At("TAIL"))
+    private void render(Viewport uiViewport, ShapeRenderer shapeRenderer, CallbackInfo ci){
+        if(!this.isShown()){
+            if(cosmicTooltips$tooltip != null) {
+                TooltipUtils.hideTooltip();
+                cosmicTooltips$tooltip = null;
+            }
+        }
+    }
 }
