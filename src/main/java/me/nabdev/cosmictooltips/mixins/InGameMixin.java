@@ -1,6 +1,7 @@
 package me.nabdev.cosmictooltips.mixins;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.InGame;
@@ -50,8 +51,8 @@ public class InGameMixin extends GameState {
 
         if(drawBG) tooltip.drawBackground(this.uiViewport, batch, cosmicTooltips$mouse.x, cosmicTooltips$mouse.y);
 
-        tooltip.textColor.a = textOpacity;
+        tooltip.setTextColor(new Color(1.0F, 1.0F, 1.0F, textOpacity));
         tooltip.drawText(this.uiViewport, batch);
-        tooltip.textColor.a = 1.0F;
+        tooltip.setTextColor(new Color(1.0F, 1.0F, 1.0F, 1.0F));
     }
 }
