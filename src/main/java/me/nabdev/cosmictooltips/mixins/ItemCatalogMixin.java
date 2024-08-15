@@ -62,16 +62,16 @@ public abstract class ItemCatalogMixin {
         if(cosmicTooltips$tooltip != null && itemStack.getItem().getID().equals(cosmicTooltips$rawName)) {
             TooltipUtils.hideTooltip();
             cosmicTooltips$tooltip = null;
+            //System.out.println("Removing from ItemCatalog notHovered");
         }
     }
 
     @Inject(method="render", at = @At("TAIL"))
     private void render(Viewport uiViewport, ShapeRenderer shapeRenderer, CallbackInfo ci){
-        if(!this.isShown()){
-            if(cosmicTooltips$tooltip != null) {
-                TooltipUtils.hideTooltip();
-                cosmicTooltips$tooltip = null;
-            }
+        if(!this.isShown() && cosmicTooltips$tooltip != null){
+            TooltipUtils.hideTooltip();
+            cosmicTooltips$tooltip = null;
+            //System.out.println("Removing from ItemCatalog render");
         }
     }
 }
