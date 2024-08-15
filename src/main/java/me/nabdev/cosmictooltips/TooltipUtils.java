@@ -7,11 +7,20 @@ import finalforeach.cosmicreach.ui.UIElement;
 
 public class TooltipUtils {
     public static int padding = 8;
-    public static UIElement tooltip;
+    private static UIElement tooltip;
+
+    private static UIElement hotbarTooltip;
+
+    private static long lastHotbarTime = 0;
 
     public static void hideTooltip(){
         if(tooltip != null) tooltip.hide();
         tooltip = null;
+    }
+
+    public static void hideHotbarTooltip(){
+        if(hotbarTooltip != null) hotbarTooltip.hide();
+        hotbarTooltip = null;
     }
     public static Vector2 getPosition(Viewport viewport, Vector2 dim) {
         Vector2 paddedDim = new Vector2(dim.x + padding, dim.y + padding);
@@ -24,5 +33,26 @@ public class TooltipUtils {
         else y -= paddedDim.y / 2;
 
         return new Vector2(x, y);
+    }
+
+    public static void setHotbarTooltip(UIElement tooltip){
+        TooltipUtils.hotbarTooltip = tooltip;
+        lastHotbarTime = System.currentTimeMillis();
+    }
+
+    public static void setTooltip(UIElement tooltip){
+        TooltipUtils.tooltip = tooltip;
+    }
+
+    public static UIElement getTooltip(){
+        return tooltip;
+    }
+
+    public static UIElement getHotbarTooltip(){
+        return hotbarTooltip;
+    }
+
+    public static long getHotbarTime(){
+        return lastHotbarTime;
     }
 }

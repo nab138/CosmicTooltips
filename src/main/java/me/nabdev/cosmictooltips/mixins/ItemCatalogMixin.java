@@ -53,7 +53,7 @@ public abstract class ItemCatalogMixin {
             cosmicTooltips$tooltip.setX(coords.x);
             cosmicTooltips$tooltip.setY(coords.y);
         }
-        TooltipUtils.tooltip = cosmicTooltips$tooltip;
+        TooltipUtils.setTooltip(cosmicTooltips$tooltip);
         cosmicTooltips$tooltip.show();
     }
 

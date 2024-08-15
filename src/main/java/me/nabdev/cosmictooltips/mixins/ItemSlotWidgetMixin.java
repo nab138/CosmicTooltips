@@ -63,7 +63,7 @@ public abstract class ItemSlotWidgetMixin {
                 cosmicTooltips$tooltip.setX(coords.x);
                 cosmicTooltips$tooltip.setY(coords.y);
             }
-            TooltipUtils.tooltip = cosmicTooltips$tooltip;
+            TooltipUtils.setTooltip(cosmicTooltips$tooltip);
         } else if(cosmicTooltips$tooltip != null) {
             TooltipUtils.hideTooltip();
             cosmicTooltips$tooltip = null;
