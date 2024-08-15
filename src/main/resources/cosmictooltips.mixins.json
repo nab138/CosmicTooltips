@@ -4,8 +4,10 @@
   "package": "me.nabdev.cosmictooltips.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ItemStackWidgetMixin",
-    "InGameMixin"
+    "BaseItemScreenMixin",
+    "InGameMixin",
+    "ItemCatalogMixin",
+    "ItemSlotWidgetMixin"
   ],
   "client": [],
   "server": [],
