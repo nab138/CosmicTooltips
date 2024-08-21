@@ -1,10 +1,11 @@
 package me.nabdev.cosmictooltips.mixins;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.ItemSlot;
-import finalforeach.cosmicreach.items.ItemSlotWidget;
+import finalforeach.cosmicreach.ui.widgets.ItemSlotWidget;
 import finalforeach.cosmicreach.ui.*;
 import me.nabdev.cosmictooltips.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,11 +16,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemSlotWidget.class)
-public abstract class ItemSlotWidgetMixin {
+public abstract class ItemSlotWidgetMixin extends Stack {
     @Shadow
     protected abstract boolean isHoveredOver();
 
-    @Shadow ItemSlot itemSlot;
+    @Shadow public ItemSlot itemSlot;
 
     @Unique
     private UIElement cosmicTooltips$tooltip;
