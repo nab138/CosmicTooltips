@@ -59,11 +59,11 @@ public abstract class ItemSlotWidgetMixin extends Stack {
             if(this.cosmicTooltips$tooltip == null) {
                 cosmicTooltips$tooltip = new UIElement(coords.x, coords.y, cosmicTooltips$dim.x + 8, cosmicTooltips$dim.y + 8);
                 cosmicTooltips$tooltip.setText(cosmicTooltips$name);
-                cosmicTooltips$tooltip.show();
             } else {
                 cosmicTooltips$tooltip.setX(coords.x);
                 cosmicTooltips$tooltip.setY(coords.y);
             }
+            cosmicTooltips$tooltip.show();
             TooltipUtils.setTooltip(cosmicTooltips$tooltip);
         } else if(cosmicTooltips$tooltip != null) {
             TooltipUtils.hideTooltip();
