@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.InGame;
-import finalforeach.cosmicreach.ui.UIElement;
+import me.nabdev.cosmictooltips.TooltipUIElement;
 import me.nabdev.cosmictooltips.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -46,13 +46,14 @@ public class InGameMixin extends GameState {
     }
 
     @Unique
-    private void cosmicTooltips$renderTooltip(UIElement tooltip, boolean drawBG, float textOpacity){
+    private void cosmicTooltips$renderTooltip(TooltipUIElement tooltip, boolean drawBG, float textOpacity){
         if(tooltip == null) return;
 
         if(drawBG) tooltip.drawBackground(this.uiViewport, batch, cosmicTooltips$mouse.x, cosmicTooltips$mouse.y);
 
-        tooltip.setTextColor(new Color(1.0F, 1.0F, 1.0F, textOpacity));
-        tooltip.drawText(this.uiViewport, batch);
-        tooltip.setTextColor(new Color(1.0F, 1.0F, 1.0F, 1.0F));
+        tooltip.drawText(this.uiViewport, batch, textOpacity, new Color[]{
+                new Color(Color.WHITE),
+                new Color(Color.GRAY),
+        });
     }
 }

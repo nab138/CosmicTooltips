@@ -1,15 +1,17 @@
 package me.nabdev.cosmictooltips;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import finalforeach.cosmicreach.ui.UIElement;
+import finalforeach.cosmicreach.ui.FontRenderer;
+import joptsimple.internal.Strings;
 
 public class TooltipUtils {
     public static int padding = 8;
-    private static UIElement tooltip;
+    private static TooltipUIElement tooltip;
 
-    private static UIElement hotbarTooltip;
+    private static TooltipUIElement hotbarTooltip;
 
     private static long lastHotbarTime = 0;
 
@@ -35,24 +37,53 @@ public class TooltipUtils {
         return new Vector2(x, y);
     }
 
-    public static void setHotbarTooltip(UIElement tooltip){
+    public static void setHotbarTooltip(TooltipUIElement tooltip){
         TooltipUtils.hotbarTooltip = tooltip;
         lastHotbarTime = System.currentTimeMillis();
     }
 
-    public static void setTooltip(UIElement tooltip){
+    public static void setTooltip(TooltipUIElement tooltip){
         TooltipUtils.tooltip = tooltip;
     }
 
-    public static UIElement getTooltip(){
+    public static TooltipUIElement getTooltip(){
         return tooltip;
     }
 
-    public static UIElement getHotbarTooltip(){
+    public static TooltipUIElement getHotbarTooltip(){
         return hotbarTooltip;
     }
 
     public static long getHotbarTime(){
         return lastHotbarTime;
+    }
+
+    public static Vector2 getTextDims(Viewport viewport, String name){
+        float y = 0;
+        float largestX = 0;
+        for(String line : name.split("\n")){
+            Vector2 dim = new Vector2();
+            FontRenderer.getTextDimensions(viewport, line, dim);
+            if(dim.x > largestX) largestX = dim.x;
+            y += dim.y;
+        }
+        return new Vector2(largestX, y);
+    }
+
+    public static String parseID(String id, boolean isAdvanced){
+        String[] split = id.split("\\[");
+
+        if (isAdvanced && split.length > 1){
+            String name = split[0];
+            String[] data = split[1].substring(0, split[1].length() - 1).split(",");
+
+            return name + "\n" + Strings.join(data, "\n");
+        } else {
+            return split[0];
+        }
+    }
+
+    public static boolean shouldBeAdvanced(){
+        return Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT);
     }
 }

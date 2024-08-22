@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BaseItemScreenMixin {
     @Inject(method = "onRemove", at= @At("TAIL"))
     private void onRemove(CallbackInfo ci) {
-        //System.out.println("Removing from BaseItemScreen");
         TooltipUtils.hideTooltip();
     }
 }

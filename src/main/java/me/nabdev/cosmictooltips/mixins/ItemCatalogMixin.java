@@ -7,8 +7,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.ItemCatalog;
 import finalforeach.cosmicreach.items.ItemStack;
-import finalforeach.cosmicreach.ui.FontRenderer;
-import finalforeach.cosmicreach.ui.UIElement;
+import me.nabdev.cosmictooltips.TooltipUIElement;
 import me.nabdev.cosmictooltips.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,26 +27,30 @@ public abstract class ItemCatalogMixin {
     private String cosmicTooltips$name;
 
     @Unique
-    private UIElement cosmicTooltips$tooltip;
+    private TooltipUIElement cosmicTooltips$tooltip;
 
     @Unique
     private String cosmicTooltips$rawName;
+
+    @Unique boolean cosmicTooltips$wasAdvanced = false;
 
     @Inject(method = "drawItems", at = @At(value = "INVOKE", target = "Lcom/badlogic/gdx/utils/viewport/Viewport;setScreenBounds(IIII)V", shift = At.Shift.AFTER, ordinal = 0))
     private void hoveredOver(Viewport uiViewport, CallbackInfo ci, @Local ItemStack itemStack) {
         Viewport viewport = GameState.IN_GAME.ui.uiViewport;
 
-        if(cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(itemStack.getItem().getID())){
+        boolean shouldBeAdvanced = TooltipUtils.shouldBeAdvanced();
+        if(cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced) {
+            cosmicTooltips$wasAdvanced = shouldBeAdvanced;
             cosmicTooltips$rawName = itemStack.getItem().getID();
-            cosmicTooltips$name = itemStack.getItem().getID().split("\\[")[0];
-            cosmicTooltips$dim = new Vector2();
+            cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced);
+            cosmicTooltips$dim = TooltipUtils.getTextDims(viewport, cosmicTooltips$name);
             cosmicTooltips$tooltip = null;
-            FontRenderer.getTextDimensions(viewport, cosmicTooltips$name, cosmicTooltips$dim);
         }
+
 
         Vector2 coords = TooltipUtils.getPosition(viewport, cosmicTooltips$dim);
         if(this.cosmicTooltips$tooltip == null) {
-            cosmicTooltips$tooltip = new UIElement(coords.x, coords.y, cosmicTooltips$dim.x + 8, cosmicTooltips$dim.y + 8);
+            cosmicTooltips$tooltip = new TooltipUIElement(coords.x, coords.y, cosmicTooltips$dim.x + 8, cosmicTooltips$dim.y + 8);
             cosmicTooltips$tooltip.setText(cosmicTooltips$name);
         } else {
             cosmicTooltips$tooltip.setX(coords.x);
@@ -62,7 +65,6 @@ public abstract class ItemCatalogMixin {
         if(cosmicTooltips$tooltip != null && itemStack.getItem().getID().equals(cosmicTooltips$rawName)) {
             TooltipUtils.hideTooltip();
             cosmicTooltips$tooltip = null;
-            //System.out.println("Removing from ItemCatalog notHovered");
         }
     }
 
@@ -71,7 +73,6 @@ public abstract class ItemCatalogMixin {
         if(!this.isShown() && cosmicTooltips$tooltip != null){
             TooltipUtils.hideTooltip();
             cosmicTooltips$tooltip = null;
-            //System.out.println("Removing from ItemCatalog render");
         }
     }
 }

@@ -37,3 +37,8 @@ public field finalforeach/cosmicreach/gamestates/PauseMenu cursorCaught
 
 public field finalforeach/cosmicreach/gamestates/InGame ui
 public field finalforeach/cosmicreach/ui/UI uiViewport
+public field finalforeach/cosmicreach/ui/UIElement shown
+public field finalforeach/cosmicreach/ui/UIElement text
+public field finalforeach/cosmicreach/ui/UIElement tmpVec
+public field finalforeach/cosmicreach/ui/UIElement textColor
+public class finalforeach/cosmicreach/ui/FontTexture

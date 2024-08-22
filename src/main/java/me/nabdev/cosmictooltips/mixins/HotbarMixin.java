@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.Hotbar;
 import finalforeach.cosmicreach.items.ItemSlot;
-import finalforeach.cosmicreach.ui.UIElement;
+import me.nabdev.cosmictooltips.TooltipUIElement;
 import me.nabdev.cosmictooltips.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +22,7 @@ public class HotbarMixin {
     private String cosmicTooltips$name;
 
     @Unique
-    private UIElement cosmicTooltips$tooltip;
+    private TooltipUIElement cosmicTooltips$tooltip;
 
     @Unique
     private String cosmicTooltips$rawName;
@@ -44,7 +44,7 @@ public class HotbarMixin {
 
         if(cosmicTooltips$tooltip == null){
             Viewport viewport = GameState.IN_GAME.ui.uiViewport;
-            cosmicTooltips$tooltip = new UIElement(0, (viewport.getWorldHeight() / 2) - 64, viewport.getWorldWidth() - (TooltipUtils.padding * 2), 0);
+            cosmicTooltips$tooltip = new TooltipUIElement(0, (viewport.getWorldHeight() / 2) - 64, viewport.getWorldWidth() - (TooltipUtils.padding * 2), 0);
         }
         cosmicTooltips$tooltip.setText(cosmicTooltips$name);
         cosmicTooltips$tooltip.show();
