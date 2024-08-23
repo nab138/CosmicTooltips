@@ -56,7 +56,7 @@ public class BlockSelectionMixin {
 
             if (cosmicTooltips$tooltip == null) {
                 Viewport viewport = GameState.IN_GAME.ui.uiViewport;
-                cosmicTooltips$tooltip = new TooltipUIElement(0, -(viewport.getWorldHeight() / 2) + 32, cosmicTooltips$dim.x + TooltipUtils.padding * 3, cosmicTooltips$dim.y + TooltipUtils.padding * 3);
+                cosmicTooltips$tooltip = new TooltipUIElement(0, -(viewport.getWorldHeight() / 2) + (cosmicTooltips$dim.y / 2) + TooltipUtils.padding * 3, cosmicTooltips$dim.x + TooltipUtils.padding * 2.5f, cosmicTooltips$dim.y + TooltipUtils.padding * 2.5f);
             }
             cosmicTooltips$tooltip.setText(cosmicTooltips$name);
             cosmicTooltips$tooltip.show();

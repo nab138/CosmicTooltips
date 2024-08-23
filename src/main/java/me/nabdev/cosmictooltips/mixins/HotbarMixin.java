@@ -16,7 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Hotbar.class)
 public class HotbarMixin {
-    @Shadow private ItemSlot selectedSlot;
+    @Shadow
+    private ItemSlot selectedSlot;
 
     @Unique
     private String cosmicTooltips$name;
@@ -27,22 +28,22 @@ public class HotbarMixin {
     @Unique
     private String cosmicTooltips$rawName;
 
-    @Inject(method="selectSlot", at=@At(value="INVOKE", target="Lfinalforeach/cosmicreach/rendering/items/ItemRenderer;popUpHeldItem()V", shift = At.Shift.AFTER))
-    public void selectSlot(int slotNum, CallbackInfo ci){
-        if(selectedSlot.itemStack == null){
+    @Inject(method = "selectSlot", at = @At(value = "INVOKE", target = "Lfinalforeach/cosmicreach/rendering/items/ItemRenderer;popUpHeldItem()V", shift = At.Shift.AFTER))
+    public void selectSlot(int slotNum, CallbackInfo ci) {
+        if (selectedSlot.itemStack == null) {
             cosmicTooltips$name = null;
             cosmicTooltips$rawName = null;
-            if(cosmicTooltips$tooltip != null){
+            if (cosmicTooltips$tooltip != null) {
                 cosmicTooltips$tooltip.hide();
                 cosmicTooltips$tooltip = null;
             }
             return;
-        } else if(cosmicTooltips$rawName == null || !cosmicTooltips$rawName.equals(selectedSlot.itemStack.getItem().getID())){
+        } else if (cosmicTooltips$rawName == null || !cosmicTooltips$rawName.equals(selectedSlot.itemStack.getItem().getID())) {
             cosmicTooltips$rawName = selectedSlot.itemStack.getItem().getID();
             cosmicTooltips$name = TooltipUtils.parseID(selectedSlot.itemStack.getItem().getID(), false, null);
         }
 
-        if(cosmicTooltips$tooltip == null){
+        if (cosmicTooltips$tooltip == null) {
             Viewport viewport = GameState.IN_GAME.ui.uiViewport;
             cosmicTooltips$tooltip = new TooltipUIElement(0, (viewport.getWorldHeight() / 2) - 64, viewport.getWorldWidth() - (TooltipUtils.padding * 2), 0);
         }
@@ -52,8 +53,8 @@ public class HotbarMixin {
     }
 
     @Inject(method = "dropSelectedItem", at = @At("HEAD"))
-    public void dropSelectedItem(CallbackInfoReturnable<Boolean> cir){
-        if(cosmicTooltips$tooltip != null){
+    public void dropSelectedItem(CallbackInfoReturnable<Boolean> cir) {
+        if (cosmicTooltips$tooltip != null) {
             cosmicTooltips$name = null;
             cosmicTooltips$tooltip = null;
             TooltipUtils.hideHotbarTooltip();

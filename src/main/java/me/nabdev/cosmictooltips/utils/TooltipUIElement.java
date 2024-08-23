@@ -53,7 +53,7 @@ public class TooltipUIElement extends UIElement {
                         x -= ((Vector2) getCharStartPos.invoke(f, c)).x % (float) texReg.getRegionWidth();
                         switch (c) {
                             case '\n':
-                                y += (float)texReg.getRegionHeight();
+                                y += (float) texReg.getRegionHeight();
                                 x = this.getDisplayX(uiViewport);
                                 maxX = Math.max(maxX, x);
                                 maxY = Math.max(maxY, y);

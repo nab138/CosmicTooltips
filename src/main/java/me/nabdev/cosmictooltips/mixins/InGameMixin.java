@@ -21,10 +21,11 @@ public class InGameMixin extends GameState {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void render(CallbackInfo ci) {
-        if(TooltipUtils.getTooltip() == null && TooltipUtils.getHotbarTooltip() == null && TooltipUtils.getWailaTooltip() == null) return;
+        if (TooltipUtils.getTooltip() == null && TooltipUtils.getHotbarTooltip() == null && TooltipUtils.getWailaTooltip() == null)
+            return;
 
         this.uiViewport.apply(false);
-        cosmicTooltips$mouse.set((float) Gdx.input.getX(), (float)Gdx.input.getY());
+        cosmicTooltips$mouse.set((float) Gdx.input.getX(), (float) Gdx.input.getY());
         this.uiViewport.unproject(cosmicTooltips$mouse);
         batch.setProjectionMatrix(this.uiCamera.combined);
         batch.begin();
@@ -36,9 +37,9 @@ public class InGameMixin extends GameState {
         long hotbarTime = TooltipUtils.getHotbarTime();
 
         float opacity = 1.0F;
-        if(curTime - hotbarTime > 3000 && curTime - hotbarTime < 3500){
+        if (curTime - hotbarTime > 3000 && curTime - hotbarTime < 3500) {
             opacity = 1.0F - ((curTime - hotbarTime - 3000) / 500.0F);
-        } else if(curTime - hotbarTime > 3500){
+        } else if (curTime - hotbarTime > 3500) {
             TooltipUtils.setHotbarTooltip(null);
         }
         cosmicTooltips$renderTooltip(TooltipUtils.getHotbarTooltip(), false, opacity);
@@ -47,10 +48,10 @@ public class InGameMixin extends GameState {
     }
 
     @Unique
-    private void cosmicTooltips$renderTooltip(TooltipUIElement tooltip, boolean drawBG, float textOpacity){
-        if(tooltip == null) return;
+    private void cosmicTooltips$renderTooltip(TooltipUIElement tooltip, boolean drawBG, float textOpacity) {
+        if (tooltip == null) return;
 
-        if(drawBG) tooltip.drawBackground(this.uiViewport, batch, cosmicTooltips$mouse.x, cosmicTooltips$mouse.y);
+        if (drawBG) tooltip.drawBackground(this.uiViewport, batch, cosmicTooltips$mouse.x, cosmicTooltips$mouse.y);
 
         tooltip.drawText(this.uiViewport, batch, textOpacity, new Color[]{
                 new Color(Color.WHITE),

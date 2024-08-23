@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemCatalog.class)
 public abstract class ItemCatalogMixin {
-    @Shadow public abstract boolean isShown();
+    @Shadow
+    public abstract boolean isShown();
 
     @Unique
     private Vector2 cosmicTooltips$dim;
@@ -32,14 +33,15 @@ public abstract class ItemCatalogMixin {
     @Unique
     private String cosmicTooltips$rawName;
 
-    @Unique boolean cosmicTooltips$wasAdvanced = false;
+    @Unique
+    boolean cosmicTooltips$wasAdvanced = false;
 
     @Inject(method = "drawItems", at = @At(value = "INVOKE", target = "Lcom/badlogic/gdx/utils/viewport/Viewport;setScreenBounds(IIII)V", shift = At.Shift.AFTER, ordinal = 0))
     private void hoveredOver(Viewport uiViewport, CallbackInfo ci, @Local ItemStack itemStack) {
         Viewport viewport = GameState.IN_GAME.ui.uiViewport;
 
         boolean shouldBeAdvanced = TooltipUtils.shouldBeAdvanced();
-        if(cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced) {
+        if (cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced) {
             cosmicTooltips$wasAdvanced = shouldBeAdvanced;
             cosmicTooltips$rawName = itemStack.getItem().getID();
             cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, null);
@@ -49,7 +51,7 @@ public abstract class ItemCatalogMixin {
 
 
         Vector2 coords = TooltipUtils.getPosition(viewport, cosmicTooltips$dim);
-        if(this.cosmicTooltips$tooltip == null) {
+        if (this.cosmicTooltips$tooltip == null) {
             cosmicTooltips$tooltip = new TooltipUIElement(coords.x, coords.y, cosmicTooltips$dim.x + 8, cosmicTooltips$dim.y + 8);
             cosmicTooltips$tooltip.setText(cosmicTooltips$name);
         } else {
@@ -62,15 +64,15 @@ public abstract class ItemCatalogMixin {
 
     @Inject(method = "drawItems", at = @At(value = "INVOKE", target = "Lcom/badlogic/gdx/utils/viewport/Viewport;setScreenBounds(IIII)V", shift = At.Shift.AFTER, ordinal = 1))
     private void notHovered(Viewport uiViewport, CallbackInfo ci, @Local ItemStack itemStack) {
-        if(cosmicTooltips$tooltip != null && itemStack.getItem().getID().equals(cosmicTooltips$rawName)) {
+        if (cosmicTooltips$tooltip != null && itemStack.getItem().getID().equals(cosmicTooltips$rawName)) {
             TooltipUtils.hideTooltip();
             cosmicTooltips$tooltip = null;
         }
     }
 
-    @Inject(method="render", at = @At("TAIL"))
-    private void render(Viewport uiViewport, ShapeRenderer shapeRenderer, CallbackInfo ci){
-        if(!this.isShown() && cosmicTooltips$tooltip != null){
+    @Inject(method = "render", at = @At("TAIL"))
+    private void render(Viewport uiViewport, ShapeRenderer shapeRenderer, CallbackInfo ci) {
+        if (!this.isShown() && cosmicTooltips$tooltip != null) {
             TooltipUtils.hideTooltip();
             cosmicTooltips$tooltip = null;
         }

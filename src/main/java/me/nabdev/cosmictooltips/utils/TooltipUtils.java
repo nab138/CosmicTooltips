@@ -87,7 +87,7 @@ public class TooltipUtils {
         if (isAdvanced && (split.length > 1 || tag != null)) {
             String name = split[0];
             String[] data = null;
-            if(split.length > 1) data = split[1].substring(0, split[1].length() - 1).split(",");
+            if (split.length > 1) data = split[1].substring(0, split[1].length() - 1).split(",");
             return name + (data != null ? "\n" + Strings.join(data, "\n") : "") + (tag != null ? "\n" + tag : "");
         } else {
             return split[0];

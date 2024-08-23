@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BaseItemScreen.class)
 public class BaseItemScreenMixin {
-    @Inject(method = "onRemove", at= @At("TAIL"))
+    @Inject(method = "onRemove", at = @At("TAIL"))
     private void onRemove(CallbackInfo ci) {
         TooltipUtils.hideTooltip();
     }

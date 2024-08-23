@@ -63,10 +63,9 @@ public abstract class ItemSlotWidgetMixin extends Stack {
 //                    cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, tag);
 //                }
                 if (this.itemSlot.itemStack.getItem() instanceof ITooltipItem) {
-                    String additionalText = ((ITooltipItem)this.itemSlot.itemStack.getItem()).getTooltipText();
+                    String additionalText = ((ITooltipItem) this.itemSlot.itemStack.getItem()).getTooltipText();
                     cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
-                }
-                else cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, null);
+                } else cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, null);
 
                 cosmicTooltips$dim = new Vector2();
                 FontRenderer.getTextDimensions(viewport, cosmicTooltips$name, cosmicTooltips$dim);
