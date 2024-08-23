@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.InGame;
-import me.nabdev.cosmictooltips.TooltipUIElement;
-import me.nabdev.cosmictooltips.TooltipUtils;
+import me.nabdev.cosmictooltips.utils.TooltipUIElement;
+import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,7 +21,7 @@ public class InGameMixin extends GameState {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void render(CallbackInfo ci) {
-        if(TooltipUtils.getTooltip() == null && TooltipUtils.getHotbarTooltip() == null) return;
+        if(TooltipUtils.getTooltip() == null && TooltipUtils.getHotbarTooltip() == null && TooltipUtils.getWailaTooltip() == null) return;
 
         this.uiViewport.apply(false);
         cosmicTooltips$mouse.set((float) Gdx.input.getX(), (float)Gdx.input.getY());
@@ -30,10 +30,11 @@ public class InGameMixin extends GameState {
         batch.begin();
 
         cosmicTooltips$renderTooltip(TooltipUtils.getTooltip(), true, 1.0F);
+        cosmicTooltips$renderTooltip(TooltipUtils.getWailaTooltip(), true, 1.0F);
+
         long curTime = System.currentTimeMillis();
         long hotbarTime = TooltipUtils.getHotbarTime();
-        // For the first 3 seconds, opacity is one
-        // Then fade out for one second
+
         float opacity = 1.0F;
         if(curTime - hotbarTime > 3000 && curTime - hotbarTime < 3500){
             opacity = 1.0F - ((curTime - hotbarTime - 3000) / 500.0F);

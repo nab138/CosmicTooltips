@@ -4,8 +4,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.Hotbar;
 import finalforeach.cosmicreach.items.ItemSlot;
-import me.nabdev.cosmictooltips.TooltipUIElement;
-import me.nabdev.cosmictooltips.TooltipUtils;
+import me.nabdev.cosmictooltips.utils.TooltipUIElement;
+import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -39,7 +39,7 @@ public class HotbarMixin {
             return;
         } else if(cosmicTooltips$rawName == null || !cosmicTooltips$rawName.equals(selectedSlot.itemStack.getItem().getID())){
             cosmicTooltips$rawName = selectedSlot.itemStack.getItem().getID();
-            cosmicTooltips$name = selectedSlot.itemStack.getItem().getID().split("\\[")[0];
+            cosmicTooltips$name = TooltipUtils.parseID(selectedSlot.itemStack.getItem().getID(), false, null);
         }
 
         if(cosmicTooltips$tooltip == null){

@@ -1,7 +1,7 @@
 package me.nabdev.cosmictooltips.mixins;
 
 import finalforeach.cosmicreach.items.screens.BaseItemScreen;
-import me.nabdev.cosmictooltips.TooltipUtils;
+import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

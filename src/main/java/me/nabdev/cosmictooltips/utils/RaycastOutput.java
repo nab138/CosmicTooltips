@@ -1,0 +1,7 @@
+package me.nabdev.cosmictooltips.utils;
+
+import com.badlogic.gdx.math.Vector3;
+import finalforeach.cosmicreach.blocks.BlockPosition;
+
+public record RaycastOutput(Vector3 hitPos, DirectionVector hitNormal, BlockPosition hitBlock) {
+}

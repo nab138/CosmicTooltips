@@ -7,8 +7,8 @@ import com.llamalad7.mixinextras.sugar.Local;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.ItemCatalog;
 import finalforeach.cosmicreach.items.ItemStack;
-import me.nabdev.cosmictooltips.TooltipUIElement;
-import me.nabdev.cosmictooltips.TooltipUtils;
+import me.nabdev.cosmictooltips.utils.TooltipUIElement;
+import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -42,7 +42,7 @@ public abstract class ItemCatalogMixin {
         if(cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced) {
             cosmicTooltips$wasAdvanced = shouldBeAdvanced;
             cosmicTooltips$rawName = itemStack.getItem().getID();
-            cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced);
+            cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, null);
             cosmicTooltips$dim = TooltipUtils.getTextDims(viewport, cosmicTooltips$name);
             cosmicTooltips$tooltip = null;
         }

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BaseItemScreenMixin",
+    "BlockSelectionMixin",
     "HotbarMixin",
     "InGameMixin",
     "ItemCatalogMixin",

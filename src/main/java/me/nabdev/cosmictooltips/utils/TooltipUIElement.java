@@ -1,4 +1,4 @@
-package me.nabdev.cosmictooltips;
+package me.nabdev.cosmictooltips.utils;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
