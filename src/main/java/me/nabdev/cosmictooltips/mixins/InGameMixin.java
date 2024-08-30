@@ -1,13 +1,20 @@
 package me.nabdev.cosmictooltips.mixins;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import finalforeach.cosmicreach.BlockSelection;
+import finalforeach.cosmicreach.blocks.BlockState;
+import finalforeach.cosmicreach.chat.Chat;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.InGame;
+import finalforeach.cosmicreach.world.World;
 import me.nabdev.cosmictooltips.utils.TooltipUIElement;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,11 +23,59 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGame.class)
 public class InGameMixin extends GameState {
 
+    @Shadow public static World world;
     @Unique
     private final Vector2 cosmicTooltips$mouse = new Vector2();
 
+    @Unique
+    private Vector2 cosmicTooltips$dim;
+
+    @Unique
+    private String cosmicTooltips$name;
+
+    @Unique
+    private TooltipUIElement cosmicTooltips$tooltip;
+
+    @Unique
+    private String cosmicTooltips$rawName;
+
+    @Inject(method="update", at=@At("TAIL"))
+    private void update(CallbackInfo ci) {
+        BlockState result = BlockSelection.getBlockLookingAt();
+        if (result == null) {
+            cosmicTooltips$name = null;
+            cosmicTooltips$rawName = null;
+            if (cosmicTooltips$tooltip != null) {
+                cosmicTooltips$tooltip.hide();
+                cosmicTooltips$tooltip = null;
+            }
+            return;
+        } else if (cosmicTooltips$dim == null || cosmicTooltips$rawName == null || !cosmicTooltips$rawName.equals(result.getItem().getID())) {
+            cosmicTooltips$rawName = result.getItem().getID();
+            cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, true, null);
+            cosmicTooltips$dim = TooltipUtils.getTextDims(GameState.IN_GAME.ui.uiViewport, cosmicTooltips$name);
+            cosmicTooltips$tooltip = null;
+        }
+
+        if (cosmicTooltips$tooltip == null) {
+            Viewport viewport = GameState.IN_GAME.ui.uiViewport;
+            cosmicTooltips$tooltip = new TooltipUIElement(0, -(viewport.getWorldHeight() / 2) + (cosmicTooltips$dim.y / 2) + TooltipUtils.padding * 3, cosmicTooltips$dim.x + TooltipUtils.padding * 2.5f, cosmicTooltips$dim.y + TooltipUtils.padding * 2.5f);
+        }
+        cosmicTooltips$tooltip.setText(cosmicTooltips$name);
+        cosmicTooltips$tooltip.show();
+        TooltipUtils.setWailaTooltip(cosmicTooltips$tooltip);
+    }
+
     @Inject(method = "render", at = @At("TAIL"))
     private void render(CallbackInfo ci) {
+        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)&& Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            TooltipUtils.british = !TooltipUtils.british;
+            if(TooltipUtils.british) {
+                Chat.MAIN_CHAT.sendMessage(world, null, null, "WARNING - BRITISH MODE ENABLED");
+            } else {
+                Chat.MAIN_CHAT.sendMessage(world, null, null, "Thank god, british mode disabled");
+            }
+        }
         if (TooltipUtils.getTooltip() == null && TooltipUtils.getHotbarTooltip() == null && TooltipUtils.getWailaTooltip() == null)
             return;
 

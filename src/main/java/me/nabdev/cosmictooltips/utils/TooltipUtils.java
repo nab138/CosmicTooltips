@@ -17,6 +17,8 @@ public class TooltipUtils {
 
     private static TooltipUIElement wailaTooltip;
 
+    public static boolean british = false;
+
     public static void hideTooltip() {
         if (tooltip != null) tooltip.hide();
         tooltip = null;
@@ -82,7 +84,7 @@ public class TooltipUtils {
     }
 
     public static String parseID(String id, boolean isAdvanced, String tag) {
-        String[] split = id.split("\\[");
+        String[] split = (british ? id : id.replace("aluminium", "aluminum")).split("\\[");
 
         if (isAdvanced && (split.length > 1 || tag != null)) {
             String name = split[0];
