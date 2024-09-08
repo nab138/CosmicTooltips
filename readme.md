@@ -20,10 +20,10 @@ mod files('libs/CosmicTooltips-1.2.4-bundle.jar')
 You will need to place the jar in the libs folder in the root of your project.
 
 ### For items:
-Implement `ITooltipItem` (one method, `String getTooltipText()`) on your item class (the one that impliments `IModItem`), and when alt is pressed it will show up
+Implement `ITooltipItem` (one method, `String getTooltipText()`) on your item class (the one that implements `IModItem`), and when alt is pressed it will show up
 
 ### For blocks:
-Implement `ITooltipBlock` (one method, `String getTooltipText(BlockState blockState)`) on your block class (the one that impliments `IModBlock`), and when alt is pressed it will show up
+Implement `ITooltipBlock` (one method, `String getTooltipText(BlockState blockState)`) on your block class (the one that implements `IModBlock`), and when alt is pressed it will show up
 
 ## Credits
 
