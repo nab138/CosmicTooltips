@@ -3,15 +3,11 @@ package me.nabdev.cosmictooltips.mixins;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.puzzle.core.Identifier;
-import com.github.puzzle.core.PuzzleRegistries;
 import finalforeach.cosmicreach.gamestates.GameState;
-import finalforeach.cosmicreach.items.ItemBlock;
 import finalforeach.cosmicreach.items.ItemSlot;
 import finalforeach.cosmicreach.ui.FontRenderer;
 import finalforeach.cosmicreach.ui.widgets.ItemSlotWidget;
-import me.nabdev.cosmictooltips.ITooltipBlock;
-import me.nabdev.cosmictooltips.ITooltipItem;
+import me.nabdev.cosmictooltips.api.ToolTipFactory;
 import me.nabdev.cosmictooltips.utils.TooltipUIElement;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -66,14 +62,9 @@ public abstract class ItemSlotWidgetMixin extends Stack {
 //                    DataTag<?> tag = ((IModItem)this.itemSlot.itemStack.getItem()).getTagManifest().getTag("tooltip");
 //                    cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, tag);
 //                }
-                if (this.itemSlot.itemStack.getItem() instanceof ITooltipItem) {
-                    String additionalText = ((ITooltipItem) this.itemSlot.itemStack.getItem()).getTooltipText();
-                    cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
-                } else if (this.itemSlot.itemStack.getItem() instanceof ItemBlock itemBlock &&
-                        PuzzleRegistries.BLOCKS.contains(Identifier.fromString(itemBlock.getBlockState().getBlockId())) &&
-                        PuzzleRegistries.BLOCKS.get(Identifier.fromString(itemBlock.getBlockState().getBlockId())) instanceof ITooltipBlock tooltipItem
-                ) {
-                    String additionalText = tooltipItem.getTooltipText(itemBlock.getBlockState());
+
+                if(ToolTipFactory.hasCustomTooltip(this.itemSlot.itemStack)) {
+                    String additionalText = ToolTipFactory.getCustomTooltip(this.itemSlot.itemStack);
                     cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
                 } else cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, null);
 

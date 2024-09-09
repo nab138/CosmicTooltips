@@ -8,7 +8,9 @@
   ],
   "entrypoints": {
     "preInit": [],
-    "init": []
+    "init": [
+      "me.nabdev.cosmictooltips.CosmicToolTips"
+    ]
   },
   "mixins": [
     "cosmictooltips.mixins.json"
