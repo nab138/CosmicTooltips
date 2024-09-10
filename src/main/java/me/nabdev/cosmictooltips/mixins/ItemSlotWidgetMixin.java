@@ -3,7 +3,10 @@ package me.nabdev.cosmictooltips.mixins;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.puzzle.game.block.IModBlock;
+import com.github.puzzle.game.items.IModItem;
 import finalforeach.cosmicreach.gamestates.GameState;
+import finalforeach.cosmicreach.items.ItemBlock;
 import finalforeach.cosmicreach.items.ItemSlot;
 import finalforeach.cosmicreach.ui.FontRenderer;
 import finalforeach.cosmicreach.ui.widgets.ItemSlotWidget;
@@ -63,8 +66,11 @@ public abstract class ItemSlotWidgetMixin extends Stack {
 //                    cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, tag);
 //                }
 
-                if(ToolTipFactory.hasCustomTooltip(this.itemSlot.itemStack)) {
-                    String additionalText = ToolTipFactory.getCustomTooltip(this.itemSlot.itemStack);
+                if(this.itemSlot.itemStack.getItem() instanceof IModItem && ToolTipFactory.hasCustomTooltipItem(this.itemSlot.itemStack)) {
+                    String additionalText = ToolTipFactory.getCustomTooltipItem(this.itemSlot.itemStack);
+                    cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
+                } else if(this.itemSlot.itemStack.getItem() instanceof ItemBlock && ToolTipFactory.hasCustomTooltipBlock((ItemBlock) this.itemSlot.itemStack.getItem())) {
+                    String additionalText = ToolTipFactory.getCustomTooltipBlock(((ItemBlock) this.itemSlot.itemStack.getItem()).getBlockState());
                     cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
                 } else cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, null);
 

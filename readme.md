@@ -19,11 +19,17 @@ mod files('libs/CosmicTooltips-1.2.4-bundle.jar')
 ```
 You will need to place the jar in the libs folder in the root of your project.
 
-### For items:
-Implement `ITooltipItem` (one method, `String getTooltipText()`) on your item class (the one that implements `IModItem`), and when alt is pressed it will show up
+### For items & blocks:
+1. Create a new class that implements `ITooltipItem` or `ITooltipBlock` then implements it's methods.
+2. Override at `getItemID` for items or `getBlockID` for blocks, method will let CosmicTooltip to know what item this additional Text go to.
+3. Override at `getTooltipText(Stack stack)` method will allow return text of whatever you want.
 
-### For blocks:
-Implement `ITooltipBlock` (one method, `String getTooltipText(BlockState blockState)`) on your block class (the one that implements `IModBlock`), and when alt is pressed it will show up
+## To register your custom ToolTips
+1. Create a new class that implements `ToolTipFactory`.
+2. Create your class constructor.
+3. In your constructor add `addTooltip(new YOUR CLASS)` in it, where YOUR CLASS has to implements `ITooltipItem` or `ITooltipBlock`;
+4. In your mod `puzzle.mod.json` under `entrypoints` add `"tooltip": []`.
+5. Now, we need to add the path of the class that implements `ToolTipFactory` to `"tooltip": []`, and now run your mod!
 
 ## Credits
 
