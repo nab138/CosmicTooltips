@@ -1,7 +1,6 @@
 package me.nabdev.cosmictooltips.utils;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import finalforeach.cosmicreach.ui.FontRenderer;
@@ -18,6 +17,8 @@ public class TooltipUtils {
     private static TooltipUIElement wailaTooltip;
 
     public static boolean british = false;
+
+    public static boolean advanced = false;
 
     public static void hideTooltip() {
         if (tooltip != null) tooltip.hide();
@@ -83,20 +84,20 @@ public class TooltipUtils {
         return new Vector2(largestX, y);
     }
 
-    public static String parseID(String id, boolean isAdvanced, String tag) {
-        String[] split = (british ? id : id.replace("aluminium", "aluminum")).split("\\[");
-
-        if (isAdvanced && (split.length > 1 || tag != null)) {
+    public static String parseID(String prettyNameRaw, String id, boolean isAdvanced, String tag) {
+        String[] split = (british ? id : id.replace("inium", "inum")).split("\\[");
+        String prettyName = british ? prettyNameRaw : prettyNameRaw.replace("inium", "inum");
+        if (isAdvanced) {
             String name = split[0];
             String[] data = null;
             if (split.length > 1) data = split[1].substring(0, split[1].length() - 1).split(",");
-            return name + (data != null ? "\n" + Strings.join(data, "\n") : "") + (tag != null ? "\n" + tag : "");
+            return prettyName + "\n" + name + (data != null ? "\n" + Strings.join(data, "\n") : "") + (tag != null ? "\n" + tag : "");
         } else {
-            return split[0];
+            return prettyName;
         }
     }
 
     public static boolean shouldBeAdvanced() {
-        return Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT);
+        return advanced;
     }
 }

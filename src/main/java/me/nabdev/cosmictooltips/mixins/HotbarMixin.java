@@ -40,7 +40,7 @@ public class HotbarMixin {
             return;
         } else if (cosmicTooltips$rawName == null || !cosmicTooltips$rawName.equals(selectedSlot.itemStack.getItem().getID())) {
             cosmicTooltips$rawName = selectedSlot.itemStack.getItem().getID();
-            cosmicTooltips$name = TooltipUtils.parseID(selectedSlot.itemStack.getItem().getID(), false, null);
+            cosmicTooltips$name = TooltipUtils.british ? selectedSlot.itemStack.getName() : selectedSlot.itemStack.getName().replace("inium", "inum");
         }
 
         if (cosmicTooltips$tooltip == null) {

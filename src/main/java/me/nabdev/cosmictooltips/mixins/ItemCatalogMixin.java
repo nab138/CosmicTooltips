@@ -44,7 +44,7 @@ public abstract class ItemCatalogMixin {
         if (cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced) {
             cosmicTooltips$wasAdvanced = shouldBeAdvanced;
             cosmicTooltips$rawName = itemStack.getItem().getID();
-            cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, null);
+            cosmicTooltips$name = TooltipUtils.parseID(itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, null);
             cosmicTooltips$dim = TooltipUtils.getTextDims(viewport, cosmicTooltips$name);
             cosmicTooltips$tooltip = null;
         }

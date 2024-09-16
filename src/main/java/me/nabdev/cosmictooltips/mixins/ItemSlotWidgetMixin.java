@@ -3,7 +3,6 @@ package me.nabdev.cosmictooltips.mixins;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.puzzle.game.block.IModBlock;
 import com.github.puzzle.game.items.IModItem;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.ItemBlock;
@@ -43,6 +42,9 @@ public abstract class ItemSlotWidgetMixin extends Stack {
     @Unique
     boolean cosmicTooltips$wasAdvanced = false;
 
+    @Unique
+    boolean cosmicTooltips$wasBritish = false;
+
     @Inject(method = "act", at = @At("TAIL"))
     private void drawTooltip(CallbackInfo ci) {
         Viewport viewport = GameState.IN_GAME.ui.uiViewport;
@@ -58,21 +60,18 @@ public abstract class ItemSlotWidgetMixin extends Stack {
             return;
         } else {
             boolean shouldBeAdvanced = TooltipUtils.shouldBeAdvanced();
-            if (cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(this.itemSlot.itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced) {
+            if (cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(this.itemSlot.itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
                 cosmicTooltips$wasAdvanced = shouldBeAdvanced;
+                cosmicTooltips$wasBritish = TooltipUtils.british;
                 cosmicTooltips$rawName = this.itemSlot.itemStack.getItem().getID();
-//                if (this.itemSlot.itemStack.getItem() instanceof IModItem) {
-//                    DataTag<?> tag = ((IModItem)this.itemSlot.itemStack.getItem()).getTagManifest().getTag("tooltip");
-//                    cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, tag);
-//                }
-
                 if(this.itemSlot.itemStack.getItem() instanceof IModItem && ToolTipFactory.hasCustomTooltipItem(this.itemSlot.itemStack)) {
                     String additionalText = ToolTipFactory.getCustomTooltipItem(this.itemSlot.itemStack);
-                    cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
+                    cosmicTooltips$name = TooltipUtils.parseID(this.itemSlot.itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
                 } else if(this.itemSlot.itemStack.getItem() instanceof ItemBlock && ToolTipFactory.hasCustomTooltipBlock((ItemBlock) this.itemSlot.itemStack.getItem())) {
                     String additionalText = ToolTipFactory.getCustomTooltipBlock(((ItemBlock) this.itemSlot.itemStack.getItem()).getBlockState());
-                    cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
-                } else cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, shouldBeAdvanced, null);
+                    cosmicTooltips$name = TooltipUtils.parseID(this.itemSlot.itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
+                } else cosmicTooltips$name = TooltipUtils.parseID(this.itemSlot.itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, null);
+
 
                 cosmicTooltips$dim = new Vector2();
                 FontRenderer.getTextDimensions(viewport, cosmicTooltips$name, cosmicTooltips$dim);
@@ -94,5 +93,10 @@ public abstract class ItemSlotWidgetMixin extends Stack {
             TooltipUtils.hideTooltip();
             cosmicTooltips$tooltip = null;
         }
+    }
+
+    @Inject(method="drawTooltip", at=@At("HEAD"), cancellable = true)
+    private void dontDrawTooltip(CallbackInfo ci) {
+        ci.cancel();
     }
 }

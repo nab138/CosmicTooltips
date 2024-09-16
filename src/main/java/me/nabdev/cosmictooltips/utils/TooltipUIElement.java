@@ -17,6 +17,16 @@ public class TooltipUIElement extends UIElement {
         super(x, y, w, h);
     }
 
+    @Override
+    public void drawBackground(Viewport uiViewport, SpriteBatch batch, float mouseX, float mouseY) {
+        if (this.shown) {
+            this.buttonTex = uiPanelTex;
+
+            batch.setColor(0.0f, 0.0f, 0.0f, 0.75f);
+            this.drawElementBackground(uiViewport, batch);
+        }
+    }
+
     public void drawText(Viewport uiViewport, SpriteBatch batch, float opacity, Color[] colors) {
         if (this.shown && this.text != null && !this.text.isEmpty()) {
             float x = this.getDisplayX(uiViewport);

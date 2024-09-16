@@ -10,6 +10,7 @@ import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.chat.Chat;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.InGame;
+import finalforeach.cosmicreach.settings.GameSetting;
 import finalforeach.cosmicreach.world.World;
 import me.nabdev.cosmictooltips.utils.TooltipUIElement;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
@@ -39,6 +40,9 @@ public class InGameMixin extends GameState {
     @Unique
     private String cosmicTooltips$rawName;
 
+    @Unique
+    private boolean cosmicTooltips$wasBritish = false;
+
     @Inject(method="update", at=@At("TAIL"))
     private void update(CallbackInfo ci) {
         BlockState result = BlockSelection.getBlockLookingAt();
@@ -50,9 +54,10 @@ public class InGameMixin extends GameState {
                 cosmicTooltips$tooltip = null;
             }
             return;
-        } else if (cosmicTooltips$dim == null || cosmicTooltips$rawName == null || !cosmicTooltips$rawName.equals(result.getItem().getID())) {
+        } else if (cosmicTooltips$dim == null || cosmicTooltips$rawName == null || !cosmicTooltips$rawName.equals(result.getItem().getID()) || cosmicTooltips$wasBritish != TooltipUtils.british) {
+            cosmicTooltips$wasBritish = TooltipUtils.british;
             cosmicTooltips$rawName = result.getItem().getID();
-            cosmicTooltips$name = TooltipUtils.parseID(cosmicTooltips$rawName, true, null);
+            cosmicTooltips$name = TooltipUtils.parseID(result.getItem().getName(), cosmicTooltips$rawName, true, null);
             cosmicTooltips$dim = TooltipUtils.getTextDims(GameState.IN_GAME.ui.uiViewport, cosmicTooltips$name);
             cosmicTooltips$tooltip = null;
         }
@@ -68,12 +73,17 @@ public class InGameMixin extends GameState {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void render(CallbackInfo ci) {
-        if(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)&& Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-            TooltipUtils.british = !TooltipUtils.british;
-            if(TooltipUtils.british) {
-                Chat.MAIN_CHAT.sendMessage(world, null, null, "WARNING - BRITISH MODE ENABLED");
-            } else {
-                Chat.MAIN_CHAT.sendMessage(world, null, null, "Thank god, british mode disabled");
+        if(Gdx.input.isKeyPressed(Input.Keys.F3)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+                TooltipUtils.british = !TooltipUtils.british;
+                GameSetting.setSetting("britishTooltips", TooltipUtils.british);
+                GameSetting.saveSettings();
+                Chat.MAIN_CHAT.sendMessage(world, null, null, TooltipUtils.british ? "[CosmicTooltips] WARNING: BRITISH MODE ENABLED" : "[CosmicTooltips] British mode disabled");
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.H)){
+                TooltipUtils.advanced = !TooltipUtils.advanced;
+                GameSetting.setSetting("advancedTooltips", TooltipUtils.advanced);
+                GameSetting.saveSettings();
+                Chat.MAIN_CHAT.sendMessage(world, null, null, TooltipUtils.advanced ? "[CosmicTooltips] Advanced tooltips enabled" : "[CosmicTooltips] Advanced tooltips disabled");
             }
         }
         if (TooltipUtils.getTooltip() == null && TooltipUtils.getHotbarTooltip() == null && TooltipUtils.getWailaTooltip() == null)
@@ -110,6 +120,7 @@ public class InGameMixin extends GameState {
 
         tooltip.drawText(this.uiViewport, batch, textOpacity, new Color[]{
                 new Color(Color.WHITE),
+                new Color(Color.LIGHT_GRAY),
                 new Color(Color.GRAY),
         });
     }
