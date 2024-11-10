@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Hotbar.class)
 public class HotbarMixin {
@@ -29,7 +28,7 @@ public class HotbarMixin {
     private String cosmicTooltips$rawName;
 
     @Inject(method = "selectSlot", at = @At(value = "INVOKE", target = "Lfinalforeach/cosmicreach/rendering/items/ItemRenderer;popUpHeldItem()V", shift = At.Shift.AFTER))
-    public void selectSlot(int slotNum, CallbackInfo ci) {
+    public void selectSlot(short slotNum, CallbackInfo ci) {
         if (selectedSlot.itemStack == null) {
             cosmicTooltips$name = null;
             cosmicTooltips$rawName = null;
@@ -53,7 +52,7 @@ public class HotbarMixin {
     }
 
     @Inject(method = "dropSelectedItem", at = @At("HEAD"))
-    public void dropSelectedItem(CallbackInfoReturnable<Boolean> cir) {
+    public void dropSelectedItem(CallbackInfo ci) {
         if (cosmicTooltips$tooltip != null) {
             cosmicTooltips$name = null;
             cosmicTooltips$tooltip = null;

@@ -11,11 +11,9 @@ import finalforeach.cosmicreach.chat.Chat;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.InGame;
 import finalforeach.cosmicreach.settings.GameSetting;
-import finalforeach.cosmicreach.world.World;
 import me.nabdev.cosmictooltips.utils.TooltipUIElement;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGame.class)
 public class InGameMixin extends GameState {
 
-    @Shadow public static World world;
     @Unique
     private final Vector2 cosmicTooltips$mouse = new Vector2();
 
@@ -78,12 +75,12 @@ public class InGameMixin extends GameState {
                 TooltipUtils.british = !TooltipUtils.british;
                 GameSetting.setSetting("britishTooltips", TooltipUtils.british);
                 GameSetting.saveSettings();
-                Chat.MAIN_CHAT.sendMessage(world, null, null, TooltipUtils.british ? "[CosmicTooltips] WARNING: BRITISH MODE ENABLED" : "[CosmicTooltips] British mode disabled");
+                Chat.MAIN_CLIENT_CHAT.addMessage( null, TooltipUtils.british ? "[CosmicTooltips] WARNING: BRITISH MODE ENABLED" : "[CosmicTooltips] British mode disabled");
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.H)){
                 TooltipUtils.advanced = !TooltipUtils.advanced;
                 GameSetting.setSetting("advancedTooltips", TooltipUtils.advanced);
                 GameSetting.saveSettings();
-                Chat.MAIN_CHAT.sendMessage(world, null, null, TooltipUtils.advanced ? "[CosmicTooltips] Advanced tooltips enabled" : "[CosmicTooltips] Advanced tooltips disabled");
+                Chat.MAIN_CLIENT_CHAT.addMessage(null, TooltipUtils.advanced ? "[CosmicTooltips] Advanced tooltips enabled" : "[CosmicTooltips] Advanced tooltips disabled");
             }
         }
         if (TooltipUtils.getTooltip() == null && TooltipUtils.getHotbarTooltip() == null && TooltipUtils.getWailaTooltip() == null)
