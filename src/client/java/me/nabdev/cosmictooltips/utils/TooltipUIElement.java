@@ -22,7 +22,7 @@ public class TooltipUIElement extends UIElement {
         if (this.shown) {
             this.buttonTex = uiPanelTex;
 
-            batch.setColor(0.0f, 0.0f, 0.0f, 0.75f);
+            batch.setColor(0.0f, 0.0f, 0.0f, 0.6f);
             this.drawElementBackground(uiViewport, batch);
         }
     }

@@ -22,5 +22,8 @@
     "cosmic-reach": ">=0.3.6",
     "puzzle-loader": ">=2.1.3"
   },
-  "accessManipulator": "cosmic_tooltips.manipulator"
+  "accessManipulator": "cosmic_tooltips.manipulator",
+  "meta": {
+    "icon": "tooltips:icons/icon.png"
+  }
 }
