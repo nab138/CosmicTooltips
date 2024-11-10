@@ -45,6 +45,7 @@ public class ToolTipFactory {
         }
     }
 
+    @SuppressWarnings("unused")
     public void addTooltip(ITooltip tooltip) {
         newToolTips.add(tooltip);
     }
