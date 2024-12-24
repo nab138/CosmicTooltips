@@ -59,7 +59,7 @@ public abstract class ItemSlotWidgetMixin extends Stack {
             return;
         } else {
             boolean shouldBeAdvanced = TooltipUtils.shouldBeAdvanced();
-            if (cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(this.getItemSlot().itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
+            if (ToolTipFactory.hasCustomTooltipBlock((ItemBlock) this.getItemSlot().itemStack.getItem()) || cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(this.getItemSlot().itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
                 cosmicTooltips$wasAdvanced = shouldBeAdvanced;
                 cosmicTooltips$wasBritish = TooltipUtils.british;
                 cosmicTooltips$rawName = this.getItemSlot().itemStack.getItem().getID();
