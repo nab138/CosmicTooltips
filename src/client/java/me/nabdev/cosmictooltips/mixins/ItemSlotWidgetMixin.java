@@ -7,6 +7,7 @@ import com.github.puzzle.game.items.IModItem;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.ItemBlock;
 import finalforeach.cosmicreach.items.ItemSlot;
+import finalforeach.cosmicreach.items.ItemStack;
 import finalforeach.cosmicreach.ui.FontRenderer;
 import finalforeach.cosmicreach.ui.widgets.ItemSlotWidget;
 import me.nabdev.cosmictooltips.api.ToolTipFactory;
@@ -59,17 +60,20 @@ public abstract class ItemSlotWidgetMixin extends Stack {
             return;
         } else {
             boolean shouldBeAdvanced = TooltipUtils.shouldBeAdvanced();
-            if (ToolTipFactory.hasCustomTooltipBlock((ItemBlock) this.getItemSlot().itemStack.getItem()) || cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(this.getItemSlot().itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
+            ItemStack itemStack = this.getItemSlot().itemStack;
+            boolean hasCustomItem = itemStack.getItem() instanceof IModItem && ToolTipFactory.hasCustomTooltipItem(itemStack);
+            boolean hasCustomBlock = itemStack.getItem() instanceof ItemBlock && ToolTipFactory.hasCustomTooltipBlock((ItemBlock) itemStack.getItem());
+            if (hasCustomItem || hasCustomBlock  || cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
                 cosmicTooltips$wasAdvanced = shouldBeAdvanced;
                 cosmicTooltips$wasBritish = TooltipUtils.british;
-                cosmicTooltips$rawName = this.getItemSlot().itemStack.getItem().getID();
-                if(this.getItemSlot().itemStack.getItem() instanceof IModItem && ToolTipFactory.hasCustomTooltipItem(this.getItemSlot().itemStack)) {
-                    String additionalText = ToolTipFactory.getCustomTooltipItem(this.getItemSlot().itemStack);
-                    cosmicTooltips$name = TooltipUtils.parseID(this.getItemSlot().itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
-                } else if(this.getItemSlot().itemStack.getItem() instanceof ItemBlock && ToolTipFactory.hasCustomTooltipBlock((ItemBlock) this.getItemSlot().itemStack.getItem())) {
-                    String additionalText = ToolTipFactory.getCustomTooltipBlock(((ItemBlock) this.getItemSlot().itemStack.getItem()).getBlockState());
-                    cosmicTooltips$name = TooltipUtils.parseID(this.getItemSlot().itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
-                } else cosmicTooltips$name = TooltipUtils.parseID(this.getItemSlot().itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, null);
+                cosmicTooltips$rawName = itemStack.getItem().getID();
+                if(hasCustomItem) {
+                    String additionalText = ToolTipFactory.getCustomTooltipItem(itemStack);
+                    cosmicTooltips$name = TooltipUtils.parseID(itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
+                } else if(hasCustomBlock) {
+                    String additionalText = ToolTipFactory.getCustomTooltipBlock(((ItemBlock) itemStack.getItem()).getBlockState());
+                    cosmicTooltips$name = TooltipUtils.parseID(itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
+                } else cosmicTooltips$name = TooltipUtils.parseID(itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, null);
 
 
                 cosmicTooltips$dim = new Vector2();
