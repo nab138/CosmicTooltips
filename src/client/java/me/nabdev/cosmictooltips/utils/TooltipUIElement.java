@@ -46,9 +46,8 @@ public class TooltipUIElement extends UIElement {
                     Method getTextRegForChar;
                     Method getCharStartPos;
                     Method getCharSize;
-
                     try {
-                        Class<?> fontTextureClass = Class.forName("finalforeach.cosmicreach.ui.FontTexture");
+                        Class<?> fontTextureClass = Class.forName("finalforeach.cosmicreach.FontTexture");
                         getTextRegForChar = Reflection.getMethod(fontTextureClass, "getTexRegForChar", char.class);
                         getCharStartPos = Reflection.getMethod(fontTextureClass, "getCharStartPos", char.class);
                         getCharSize = Reflection.getMethod(fontTextureClass, "getCharSize", char.class);
