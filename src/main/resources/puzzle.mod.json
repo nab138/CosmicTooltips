@@ -1,5 +1,9 @@
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
+  "allowedSides": {
+    "client": true,
+    "server": false
+  },
   "id": "${mod_id}",
   "version": "${mod_version}",
   "name": "${mod_name}",
