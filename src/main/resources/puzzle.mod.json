@@ -24,7 +24,7 @@
   ],
   "depends": {
     "cosmic-reach": ">=0.3.14",
-    "puzzle-loader": ">=2.2.1"
+    "puzzle-loader": ">=2.2.2"
   },
   "accessTransformers": [ "cosmic_tooltips.manipulator" ],
   "meta": {
