@@ -36,11 +36,10 @@ public class ToolTipFactory {
         for(ITooltip tooltip : newToolTips){
             if(tooltip instanceof ITooltipItem tooltipItem)  {
                 initializeToolTipsItems.put(tooltipItem.getItemID(),tooltipItem);
-                break;
+                continue;
             }
             if(tooltip instanceof ITooltipBlock tooltipBlock) {
                 initializeToolTipsBlocks.put(tooltipBlock.getBlockID(), tooltipBlock);
-                break;
             }
         }
     }
