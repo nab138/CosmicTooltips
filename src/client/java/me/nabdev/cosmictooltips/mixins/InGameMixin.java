@@ -14,14 +14,18 @@ import finalforeach.cosmicreach.settings.GameSetting;
 import me.nabdev.cosmictooltips.utils.TooltipUIElement;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+// TODO: Switch to CRButton/other stage widgets
+@SuppressWarnings("removal")
 @Mixin(InGame.class)
 public class InGameMixin extends GameState {
 
+    @Shadow public BlockSelection blockSelection;
     @Unique
     private final Vector2 cosmicTooltips$mouse = new Vector2();
 
@@ -42,7 +46,7 @@ public class InGameMixin extends GameState {
 
     @Inject(method="update", at=@At("TAIL"))
     private void update(CallbackInfo ci) {
-        BlockState result = BlockSelection.getBlockLookingAt();
+        BlockState result = this.blockSelection.getBlockLookingAt();
         if (result == null) {
             cosmicTooltips$name = null;
             cosmicTooltips$rawName = null;
