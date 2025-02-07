@@ -7,12 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.puzzle.core.loader.util.Reflection;
 import finalforeach.cosmicreach.ui.FontRenderer;
-import finalforeach.cosmicreach.ui.UIElement;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class TooltipUIElement extends UIElement {
+// TODO: Switch to CRButton/other stage widgets
+@SuppressWarnings("removal")
+public class TooltipUIElement extends finalforeach.cosmicreach.ui.UIElement {
     public TooltipUIElement(float x, float y, float w, float h) {
         super(x, y, w, h);
     }
