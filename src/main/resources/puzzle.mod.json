@@ -23,8 +23,8 @@
     }
   ],
   "depends": {
-    "cosmic-reach": ">=0.3.14",
-    "puzzle-loader": ">=2.2.2"
+    "cosmic-reach": ">=0.3.21",
+    "puzzle-loader": ">=2.2.7"
   },
   "accessTransformers": [ "cosmic_tooltips.manipulator" ],
   "meta": {
