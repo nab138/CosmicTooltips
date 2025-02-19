@@ -24,6 +24,8 @@ repositories {
 }
 
 dependencies {
+    implementation files("libs/PuzzleLoader-2.3.3-merged-bundle.jar")
+    clientImplementation files("libs/PuzzleLoader-2.3.3-merged-bundle.jar")
     cosmicReach("finalforeach:cosmicreach:${cosmic_reach_version}")
 }
 

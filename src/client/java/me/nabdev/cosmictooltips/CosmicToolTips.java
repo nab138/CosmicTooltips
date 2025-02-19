@@ -3,6 +3,7 @@ package me.nabdev.cosmictooltips;
 import com.github.puzzle.core.loader.launch.provider.mod.entrypoint.impls.ClientModInitializer;
 import com.github.puzzle.core.loader.util.PuzzleEntrypointUtil;
 import finalforeach.cosmicreach.settings.GameSetting;
+import finalforeach.cosmicreach.ui.GameStyles;
 import me.nabdev.cosmictooltips.api.ToolTipFactory;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
 

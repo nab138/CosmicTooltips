@@ -1,110 +1,69 @@
 package me.nabdev.cosmictooltips.utils;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.github.puzzle.core.loader.util.Reflection;
-import finalforeach.cosmicreach.ui.FontRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import finalforeach.cosmicreach.ui.GameStyles;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import static finalforeach.cosmicreach.ui.GameStyles.menuButton9Patch;
 
-// TODO: Switch to CRButton/other stage widgets
-@SuppressWarnings("removal")
-public class TooltipUIElement extends finalforeach.cosmicreach.ui.UIElement {
-    public TooltipUIElement(float x, float y, float w, float h) {
-        super(x, y, w, h);
+
+public class TooltipUIElement extends Table {
+    private static final int fontHeight = 16;
+    Label.LabelStyle intermediateText = new Label.LabelStyle(GameStyles.styleText.font, Color.LIGHT_GRAY);
+    Label.LabelStyle advancedText = new Label.LabelStyle(GameStyles.styleText.font, Color.DARK_GRAY);
+
+    public TooltipUIElement(String name, String id, String other, Vector2 position) {
+        super();
+        updateText(name, id, other);
+        setBackground(new NinePatchDrawable(menuButton9Patch));
+        setPosition(position.x, position.y);
     }
 
-    @Override
-    public void drawBackground(Viewport uiViewport, SpriteBatch batch, float mouseX, float mouseY) {
-        if (this.shown) {
-            this.buttonTex = uiPanelTex;
-
-            batch.setColor(0.0f, 0.0f, 0.0f, 0.6f);
-            this.drawElementBackground(uiViewport, batch);
-        }
+    public TooltipUIElement(String name, String id, String other, Stage stage) {
+        super();
+        updateText(name, id, other);
+        setBackground(new NinePatchDrawable(menuButton9Patch));
+        float x = (stage.getWidth() - this.getPrefWidth()) / 2;
+        float y = stage.getHeight() - this.getPrefHeight();
+        setPosition(x, y);
     }
 
-    public void drawText(Viewport uiViewport, SpriteBatch batch, float opacity, Color[] colors) {
-        if (this.shown && this.text != null && !this.text.isEmpty()) {
-            float x = this.getDisplayX(uiViewport);
-            float y = this.getDisplayY(uiViewport);
-            String[] lines = this.text.split("\n");
 
-            FontRenderer.getTextDimensions(uiViewport, this.text, this.tmpVec);
-            if (this.tmpVec.x > this.w) {
-                FontRenderer.drawTextbox(batch, uiViewport, this.text, x, y, this.w);
-            } else {
-                float maxX = x;
-                float maxY = y;
+    public void updateText(String name, String id, String other) {
+        Label nameLabel = new Label(name, GameStyles.styleText);
+        this.add(nameLabel).left().pad(TooltipUtils.padding).padTop(fontHeight + TooltipUtils.padding).padBottom(0);
 
-                for (int i = 0; i < this.text.length(); ++i) {
-                    char c = this.text.charAt(i);
+        row();
 
-                    Method getTextRegForChar;
-                    Method getCharStartPos;
-                    Method getCharSize;
-                    try {
-                        Class<?> fontTextureClass = Class.forName("finalforeach.cosmicreach.FontTexture");
-                        getTextRegForChar = Reflection.getMethod(fontTextureClass, "getTexRegForChar", char.class);
-                        getCharStartPos = Reflection.getMethod(fontTextureClass, "getCharStartPos", char.class);
-                        getCharSize = Reflection.getMethod(fontTextureClass, "getCharSize", char.class);
+        Label idLabel = new Label(id, intermediateText);
+        this.add(idLabel).left().pad(TooltipUtils.padding).padTop(fontHeight).padBottom(other == null ? TooltipUtils.padding : 0);
 
-                        var f = FontRenderer.getFontTexOfChar(c);
-                        if (f == null) {
-                            c = '?';
-                            f = FontRenderer.getFontTexOfChar(c);
-                        }
-
-                        TextureRegion texReg = (TextureRegion) getTextRegForChar.invoke(f, c);
-                        x -= ((Vector2) getCharStartPos.invoke(f, c)).x % (float) texReg.getRegionWidth();
-                        switch (c) {
-                            case '\n':
-                                y += (float) texReg.getRegionHeight();
-                                x = this.getDisplayX(uiViewport);
-                                maxX = Math.max(maxX, x);
-                                maxY = Math.max(maxY, y);
-                                break;
-                            case ' ':
-                                x += ((Vector2) getCharSize.invoke(f, c)).x / 4.0F;
-                                maxX = Math.max(maxX, x);
-                                break;
-                            default:
-                                x += ((Vector2) getCharSize.invoke(f, c)).x + ((Vector2) getCharStartPos.invoke(f, c)).x % (float) texReg.getRegionWidth() + 2.0F;
-                                maxX = Math.max(maxX, x);
-                                maxY = Math.max(maxY, y + (float) texReg.getRegionHeight());
-                        }
-                    } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
-                        System.out.println("Failed to reflect FontTexture methods");
-                        e.printStackTrace();
-                        return;
-                    }
-                }
-                x = this.getDisplayX(uiViewport);
-                y = this.getDisplayY(uiViewport);
-                x += this.w / 2.0F - (maxX - x) / 2.0F;
-                y += this.h / 2.0F - (maxY - y) / 2.0F;
-
-                for (int j = 0; j < lines.length; ++j) {
-                    String line = lines[j];
-                    float displayY = y + ((this.tmpVec.y / lines.length) * (j));
-                    Color textColor;
-                    if (j < colors.length) {
-                        textColor = colors[j];
-                    } else if (colors.length > 0) {
-                        textColor = colors[colors.length - 1];
-                    } else {
-                        textColor = new Color(this.textColor);
-                    }
-                    Color text = new Color(textColor.r, textColor.g, textColor.b, opacity);
-                    batch.setColor(text);
-                    FontRenderer.drawText(batch, uiViewport, line, x, displayY);
-                    batch.setColor(new Color(Color.WHITE));
-                }
-            }
+        if (other != null) {
+            row();
+            Label otherLabels = new Label(other, advancedText);
+            this.add(otherLabels).left().expand().fill().pad(TooltipUtils.padding).padTop(fontHeight);
         }
+
+        updateDims();
+    }
+
+    public void setPosition(Vector2 position) {
+        if(position.x + this.getPrefWidth() > TooltipUtils.getStage().getWidth()) {
+            position.x -= this.getPrefWidth() - 8;
+        }
+
+        if(position.y + this.getPrefHeight() > TooltipUtils.getStage().getHeight()) {
+            position.y -= this.getPrefHeight() - 8;
+        }
+
+        this.setPosition(position.x, position.y);
+    }
+
+    private void updateDims() {
+        this.setSize(this.getPrefWidth(), this.getPrefHeight());
     }
 }

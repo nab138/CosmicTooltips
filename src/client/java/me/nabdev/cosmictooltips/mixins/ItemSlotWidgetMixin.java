@@ -1,14 +1,12 @@
 package me.nabdev.cosmictooltips.mixins;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.puzzle.game.items.IModItem;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.ItemBlock;
 import finalforeach.cosmicreach.items.ItemSlot;
 import finalforeach.cosmicreach.items.ItemStack;
-import finalforeach.cosmicreach.ui.FontRenderer;
 import finalforeach.cosmicreach.ui.widgets.ItemSlotWidget;
 import me.nabdev.cosmictooltips.api.ToolTipFactory;
 import me.nabdev.cosmictooltips.utils.TooltipUIElement;
@@ -20,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemSlotWidget.class)
+@Mixin(value = ItemSlotWidget.class)
 public abstract class ItemSlotWidgetMixin extends Stack {
     @Shadow
     protected abstract boolean isHoveredOver();
@@ -31,13 +29,7 @@ public abstract class ItemSlotWidgetMixin extends Stack {
     private TooltipUIElement cosmicTooltips$tooltip;
 
     @Unique
-    private Vector2 cosmicTooltips$dim;
-
-    @Unique
-    private String cosmicTooltips$name;
-
-    @Unique
-    String cosmicTooltips$rawName;
+    private String cosmicTooltips$rawId = "";
 
     @Unique
     boolean cosmicTooltips$wasAdvanced = false;
@@ -46,60 +38,47 @@ public abstract class ItemSlotWidgetMixin extends Stack {
     boolean cosmicTooltips$wasBritish = false;
 
     @Inject(method = "act", at = @At("TAIL"))
-    private void drawTooltip(CallbackInfo ci) {
-        Viewport viewport = GameState.IN_GAME.ui.uiViewport;
-
-
-        if (this.getItemSlot().itemStack == null) {
-            cosmicTooltips$name = null;
-            cosmicTooltips$dim = null;
+    private void act(float delta, CallbackInfo ci) {
+        if (this.getItemSlot().getItemStack() == null) {
+            cosmicTooltips$rawId = "";
             if (cosmicTooltips$tooltip != null) {
-                TooltipUtils.hideTooltip();
                 cosmicTooltips$tooltip = null;
             }
             return;
         } else {
             boolean shouldBeAdvanced = TooltipUtils.shouldBeAdvanced();
-            ItemStack itemStack = this.getItemSlot().itemStack;
+            ItemStack itemStack = this.getItemSlot().getItemStack();
             boolean hasCustomItem = itemStack.getItem() instanceof IModItem && ToolTipFactory.hasCustomTooltipItem(itemStack);
             boolean hasCustomBlock = itemStack.getItem() instanceof ItemBlock && ToolTipFactory.hasCustomTooltipBlock((ItemBlock) itemStack.getItem());
-            if (hasCustomItem || hasCustomBlock  || cosmicTooltips$dim == null || !cosmicTooltips$rawName.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
+            if (hasCustomItem || hasCustomBlock  || !cosmicTooltips$rawId.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
                 cosmicTooltips$wasAdvanced = shouldBeAdvanced;
                 cosmicTooltips$wasBritish = TooltipUtils.british;
-                cosmicTooltips$rawName = itemStack.getItem().getID();
+                cosmicTooltips$rawId = itemStack.getItem().getID();
+                if(cosmicTooltips$rawId == null) {
+                    cosmicTooltips$rawId = "";
+                    return;
+                }
+                String tag = null;
                 if(hasCustomItem) {
-                    String additionalText = ToolTipFactory.getCustomTooltipItem(itemStack);
-                    cosmicTooltips$name = TooltipUtils.parseID(itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
+                    tag = ToolTipFactory.getCustomTooltipItem(itemStack);
                 } else if(hasCustomBlock) {
-                    String additionalText = ToolTipFactory.getCustomTooltipBlock(((ItemBlock) itemStack.getItem()).getBlockState());
-                    cosmicTooltips$name = TooltipUtils.parseID(itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, additionalText);
-                } else cosmicTooltips$name = TooltipUtils.parseID(itemStack.getName(), cosmicTooltips$rawName, shouldBeAdvanced, null);
-
-
-                cosmicTooltips$dim = new Vector2();
-                FontRenderer.getTextDimensions(viewport, cosmicTooltips$name, cosmicTooltips$dim);
+                    tag = ToolTipFactory.getCustomTooltipBlock(((ItemBlock) itemStack.getItem()).getBlockState());
+                }
+                String name = TooltipUtils.parseName(itemStack.getItem().getName());
+                String id = TooltipUtils.parseId(itemStack.getItem().getID());
+                String other = TooltipUtils.parseOther(itemStack.getItem().getID(), tag);
+                cosmicTooltips$tooltip = new TooltipUIElement(name, id, other, TooltipUtils.getPosition());
             }
         }
 
         if (this.isHoveredOver()) {
-            Vector2 coords = TooltipUtils.getPosition(viewport, cosmicTooltips$dim);
-            if (this.cosmicTooltips$tooltip == null || !this.cosmicTooltips$tooltip.text.equals(cosmicTooltips$name)) {
-                cosmicTooltips$tooltip = new TooltipUIElement(coords.x, coords.y, cosmicTooltips$dim.x + 8, cosmicTooltips$dim.y + 8);
-                cosmicTooltips$tooltip.setText(cosmicTooltips$name);
-            } else {
-                cosmicTooltips$tooltip.setX(coords.x);
-                cosmicTooltips$tooltip.setY(coords.y);
-            }
-            cosmicTooltips$tooltip.show();
-            TooltipUtils.setTooltip(cosmicTooltips$tooltip);
-        } else if (cosmicTooltips$tooltip != null) {
-            TooltipUtils.hideTooltip();
-            cosmicTooltips$tooltip = null;
+            cosmicTooltips$tooltip.setPosition(TooltipUtils.getPosition());
         }
     }
 
     @Inject(method="drawTooltip", at=@At("HEAD"), cancellable = true)
-    private void dontDrawTooltip(CallbackInfo ci) {
+    private void dontDrawTooltip(Batch batch, CallbackInfo ci) {
+        if(cosmicTooltips$tooltip != null && this.isHoveredOver()) cosmicTooltips$tooltip.draw(batch, 1);
         ci.cancel();
     }
 }

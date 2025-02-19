@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ToolTipFactory {
-
     public static final HashMap<String, ITooltipItem> initializeToolTipsItems = new HashMap<>();
     public static final HashMap<String, ITooltipBlock> initializeToolTipsBlocks = new HashMap<>();
     List<ITooltip> newToolTips = new ArrayList<>();

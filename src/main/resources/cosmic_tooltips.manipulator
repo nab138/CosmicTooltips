@@ -42,3 +42,4 @@ public field finalforeach/cosmicreach/ui/UIElement text
 public field finalforeach/cosmicreach/ui/UIElement tmpVec
 public field finalforeach/cosmicreach/ui/UIElement textColor
 public class finalforeach/cosmicreach/ui/FontTexture
+public field finalforeach/cosmicreach/ui/widgets/ItemSlotWidget tmpVec

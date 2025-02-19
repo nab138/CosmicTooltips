@@ -1,9 +1,12 @@
 package me.nabdev.cosmictooltips.mixins;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.Hotbar;
 import finalforeach.cosmicreach.items.ItemSlot;
+import finalforeach.cosmicreach.ui.GameStyles;
 import me.nabdev.cosmictooltips.utils.TooltipUIElement;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,44 +22,61 @@ public class HotbarMixin {
     private ItemSlot selectedSlot;
 
     @Unique
-    private String cosmicTooltips$name;
-
-    @Unique
-    private TooltipUIElement cosmicTooltips$tooltip;
-
-    @Unique
     private String cosmicTooltips$rawName;
+
+    @Unique
+    private Label cosmicTooltips$label;
+
 
     @Inject(method = "selectSlot", at = @At(value = "INVOKE", target = "Lfinalforeach/cosmicreach/rendering/items/ItemRenderer;popUpHeldItem()V", shift = At.Shift.AFTER))
     public void selectSlot(short slotNum, CallbackInfo ci) {
-        if (selectedSlot.itemStack == null) {
-            cosmicTooltips$name = null;
-            cosmicTooltips$rawName = null;
-            if (cosmicTooltips$tooltip != null) {
-                cosmicTooltips$tooltip.hide();
-                cosmicTooltips$tooltip = null;
+        if (selectedSlot.getItemStack() == null) {
+            if (cosmicTooltips$label != null) {
+                cosmicTooltips$label.remove();
+                cosmicTooltips$label = null;
+                cosmicTooltips$rawName = null;
             }
             return;
-        } else if (cosmicTooltips$rawName == null || !cosmicTooltips$rawName.equals(selectedSlot.itemStack.getItem().getID())) {
-            cosmicTooltips$rawName = selectedSlot.itemStack.getItem().getID();
-            cosmicTooltips$name = TooltipUtils.british ? selectedSlot.itemStack.getName() : selectedSlot.itemStack.getName().replace("inium", "inum");
+        }
+        if (cosmicTooltips$rawName == null || !cosmicTooltips$rawName.equals(selectedSlot.getItemStack().getItem().getID())) {
+            cosmicTooltips$rawName = selectedSlot.getItemStack().getItem().getID();
+            String name = TooltipUtils.british ? selectedSlot.getItemStack().getName() : selectedSlot.getItemStack().getName().replace("inium", "inum");
+            if (cosmicTooltips$label != null) {
+                cosmicTooltips$label.remove();
+            }
+            cosmicTooltips$label = new Label(name, GameStyles.styleText) {
+                private float lifetime;
+
+                @Override
+                public void act(float delta) {
+                    super.act(delta);
+                    lifetime += delta;
+                    float timeUntilFade = 2.5f;
+                    float fadeTime = 0.5f;
+                    if (lifetime > timeUntilFade) {
+                        setColor(1, 1, 1, 1 - (lifetime - timeUntilFade) / fadeTime);
+                    }
+                }
+            };
+            Stage stage = TooltipUtils.getStage();
+            cosmicTooltips$label.setPosition(stage.getWidth() / 2 - cosmicTooltips$label.getPrefWidth() / 2, 50);
+            TooltipUtils.getStage().addActor(cosmicTooltips$label);
         }
 
-        if (cosmicTooltips$tooltip == null) {
-            Viewport viewport = GameState.IN_GAME.ui.uiViewport;
-            cosmicTooltips$tooltip = new TooltipUIElement(0, (viewport.getWorldHeight() / 2) - 64, viewport.getWorldWidth() - (TooltipUtils.padding * 2), 0);
-        }
-        cosmicTooltips$tooltip.setText(cosmicTooltips$name);
-        cosmicTooltips$tooltip.show();
-        TooltipUtils.setHotbarTooltip(cosmicTooltips$tooltip);
+//        if (cosmicTooltips$tooltip == null) {
+//            Viewport viewport = GameState.IN_GAME.ui.uiViewport;
+//            //cosmicTooltips$tooltip = new TooltipUIElement(0, (viewport.getWorldHeight() / 2) - 64);
+//        }
+        //cosmicTooltips$tooltip.setText(cosmicTooltips$name);
+        //cosmicTooltips$tooltip.show();
     }
 
     @Inject(method = "dropSelectedItem", at = @At("HEAD"))
     public void dropSelectedItem(CallbackInfo ci) {
-        if (cosmicTooltips$tooltip != null) {
-            cosmicTooltips$name = null;
-            cosmicTooltips$tooltip = null;
-            TooltipUtils.hideHotbarTooltip();
+        if (cosmicTooltips$label != null) {
+            cosmicTooltips$label.remove();
+            cosmicTooltips$label = null;
+            cosmicTooltips$rawName = null;
         }
     }
 }

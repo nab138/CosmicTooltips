@@ -2,102 +2,52 @@ package me.nabdev.cosmictooltips.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import finalforeach.cosmicreach.ui.FontRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import finalforeach.cosmicreach.gamestates.GameState;
 import joptsimple.internal.Strings;
 
 public class TooltipUtils {
-    public static int padding = 8;
-    private static TooltipUIElement tooltip;
-
-    private static TooltipUIElement hotbarTooltip;
+    public static int padding = 6;
 
     private static long lastHotbarTime = 0;
-
-    private static TooltipUIElement wailaTooltip;
 
     public static boolean british = false;
 
     public static boolean advanced = false;
 
-    public static void hideTooltip() {
-        if (tooltip != null) tooltip.hide();
-        tooltip = null;
+    public static Vector2 getPosition() {
+        float x = Gdx.input.getX();
+        float y = Gdx.input.getY();
+
+        return getStage().getViewport().unproject(new Vector2(x, y));
     }
 
-    public static void hideHotbarTooltip() {
-        if (hotbarTooltip != null) hotbarTooltip.hide();
-        hotbarTooltip = null;
-    }
-
-    public static Vector2 getPosition(Viewport viewport, Vector2 dim) {
-        Vector2 paddedDim = new Vector2(dim.x + padding, dim.y + padding);
-        float x = ((float) Gdx.input.getX() / Gdx.graphics.getWidth()) * viewport.getWorldWidth() - (viewport.getWorldWidth() / 2.0F);
-        float y = ((float) Gdx.input.getY() / Gdx.graphics.getHeight()) * viewport.getWorldHeight() - (viewport.getWorldHeight() / 2.0F);
-
-        if (x + paddedDim.x + padding > viewport.getWorldWidth() / 2.0F) x -= paddedDim.x / 2;
-        else x += paddedDim.x / 2;
-        if (y - paddedDim.y - padding < -viewport.getWorldHeight() / 2.0F) y += paddedDim.y / 2;
-        else y -= paddedDim.y / 2;
-
-        return new Vector2(x, y);
-    }
-
-    public static void setHotbarTooltip(TooltipUIElement tooltip) {
-        TooltipUtils.hotbarTooltip = tooltip;
-        lastHotbarTime = System.currentTimeMillis();
-    }
-
-    public static void setWailaTooltip(TooltipUIElement tooltip) {
-        TooltipUtils.wailaTooltip = tooltip;
-    }
-
-    public static void setTooltip(TooltipUIElement tooltip) {
-        TooltipUtils.tooltip = tooltip;
-    }
-
-    public static TooltipUIElement getTooltip() {
-        return tooltip;
-    }
-
-    public static TooltipUIElement getHotbarTooltip() {
-        return hotbarTooltip;
-    }
-
-    public static TooltipUIElement getWailaTooltip() {
-        return wailaTooltip;
-    }
 
     public static long getHotbarTime() {
         return lastHotbarTime;
     }
 
-    public static Vector2 getTextDims(Viewport viewport, String name) {
-        float y = 0;
-        float largestX = 0;
-        for (String line : name.split("\n")) {
-            Vector2 dim = new Vector2();
-            FontRenderer.getTextDimensions(viewport, line, dim);
-            if (dim.x > largestX) largestX = dim.x;
-            y += dim.y;
-        }
-        return new Vector2(largestX, y);
+    public static String parseName(String prettyNameRaw) {
+        return british ? prettyNameRaw : prettyNameRaw.replace("inium", "inum");
     }
 
-    public static String parseID(String prettyNameRaw, String id, boolean isAdvanced, String tag) {
-        String[] split = (british ? id : id.replace("inium", "inum")).split("\\[");
-        String prettyName = british ? prettyNameRaw : prettyNameRaw.replace("inium", "inum");
-        if (isAdvanced) {
-            String name = split[0];
-            String[] data = null;
-            if (split.length > 1) data = split[1].substring(0, split[1].length() - 1).split(",");
-            return prettyName + "\n" + name + (data != null ? "\n" + Strings.join(data, "\n") : "") + (tag != null ? "\n" + tag : "");
-        } else {
-            return prettyName;
-        }
+    public static String parseId (String id) {
+        return id.split("\\[")[0];
+    }
+    public static String parseOther(String id, String tag){
+        String[] split = id.split("\\[");
+        String[] data = null;
+        if (split.length > 1) data = split[1].substring(0, split[1].length() - 1).split(",");
+        String result = (data != null ? Strings.join(data, "\n") : "") + (tag != null ? "\n" + tag : "");
+        if(result.isEmpty()) return null;
+        return result;
     }
 
     public static boolean shouldBeAdvanced() {
         return advanced;
+    }
+
+    public static Stage getStage(){
+        return ((IStageGetter) GameState.IN_GAME).cosmicTooltips$getStage();
     }
 }
