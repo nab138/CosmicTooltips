@@ -34,6 +34,9 @@ public class InGameMixin extends GameState implements IStageGetter {
     @Unique
     private boolean cosmicTooltips$wasBritish = false;
 
+    @Unique
+    private int cosmicTooltips$prevAdvanced = 0;
+
     @Inject(method = "update", at = @At("TAIL"))
     private void update(CallbackInfo ci) {
         BlockState result = this.blockSelection.getBlockLookingAt();
@@ -45,12 +48,13 @@ public class InGameMixin extends GameState implements IStageGetter {
             }
             return;
         }
-        if (cosmicTooltips$rawId != null && cosmicTooltips$rawId.equals(result.getItem().getID()) && cosmicTooltips$wasBritish == TooltipUtils.british)
+        if (cosmicTooltips$rawId != null && cosmicTooltips$rawId.equals(result.getItem().getID()) && cosmicTooltips$wasBritish == TooltipUtils.british && cosmicTooltips$prevAdvanced == TooltipUtils.advanced)
             return;
 
+        cosmicTooltips$prevAdvanced = TooltipUtils.advanced;
         cosmicTooltips$wasBritish = TooltipUtils.british;
         cosmicTooltips$rawId = result.getItem().getID();
-        String id = TooltipUtils.parseId(result.getItem().getID());
+        String id = TooltipUtils.parseIdForced(result.getItem().getID());
         String name = TooltipUtils.parseName(result.getItem().getName());
         String others = TooltipUtils.parseOther(result.getItem().getID(), null);
         if (cosmicTooltips$tooltip != null) {
@@ -70,10 +74,16 @@ public class InGameMixin extends GameState implements IStageGetter {
                 GameSetting.saveSettings();
                 Chat.MAIN_CLIENT_CHAT.addMessage(null, TooltipUtils.british ? "[CosmicTooltips] WARNING: BRITISH MODE ENABLED" : "[CosmicTooltips] British mode disabled");
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-                TooltipUtils.advanced = !TooltipUtils.advanced;
-                GameSetting.setSetting("advancedTooltips", TooltipUtils.advanced);
+                TooltipUtils.advanced = (TooltipUtils.advanced + 1) % 3;
+                GameSetting.setSetting("advancedTooltipMode", TooltipUtils.advanced);
                 GameSetting.saveSettings();
-                Chat.MAIN_CLIENT_CHAT.addMessage(null, TooltipUtils.advanced ? "[CosmicTooltips] Advanced tooltips enabled" : "[CosmicTooltips] Advanced tooltips disabled");
+                String msg = switch (TooltipUtils.advanced) {
+                    case 0 -> "Advanced tooltips disabled";
+                    case 1 -> "Advanced tooltips enabled (press again to see more)";
+                    case 2 -> "Ultra-advanced tooltips enabled";
+                    default -> "How did you do this?";
+                };
+                Chat.MAIN_CLIENT_CHAT.addMessage(null, "[CosmicTooltips] " + msg);
             }
         }
     }

@@ -29,7 +29,7 @@ public abstract class ItemCatalogMixin {
     private String cosmicTooltips$rawId = "";
 
     @Unique
-    boolean cosmicTooltips$wasAdvanced = false;
+    int cosmicTooltips$prevAdvanced = 0;
 
     @Unique
     boolean cosmicTooltips$wasBritish = false;
@@ -43,25 +43,25 @@ public abstract class ItemCatalogMixin {
                 cosmicTooltips$tooltip = null;
             }
         } else {
-            boolean shouldBeAdvanced = TooltipUtils.shouldBeAdvanced();
+            int shouldBeAdvanced = TooltipUtils.advanced;
             boolean hasCustomItem = itemStack.getItem() instanceof IModItem && ToolTipFactory.hasCustomTooltipItem(itemStack);
             boolean hasCustomBlock = itemStack.getItem() instanceof ItemBlock && ToolTipFactory.hasCustomTooltipBlock((ItemBlock) itemStack.getItem());
-            if (hasCustomItem || hasCustomBlock  || !cosmicTooltips$rawId.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
-                if(cosmicTooltips$tooltip != null) {
+            if (hasCustomItem || hasCustomBlock || !cosmicTooltips$rawId.equals(itemStack.getItem().getID()) || cosmicTooltips$prevAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
+                if (cosmicTooltips$tooltip != null) {
                     cosmicTooltips$tooltip.remove();
                     cosmicTooltips$tooltip = null;
                 }
-                cosmicTooltips$wasAdvanced = shouldBeAdvanced;
+                cosmicTooltips$prevAdvanced = shouldBeAdvanced;
                 cosmicTooltips$wasBritish = TooltipUtils.british;
                 cosmicTooltips$rawId = itemStack.getItem().getID();
-                if(cosmicTooltips$rawId == null) {
+                if (cosmicTooltips$rawId == null) {
                     cosmicTooltips$rawId = "";
                     return;
                 }
                 String tag = null;
-                if(hasCustomItem) {
+                if (hasCustomItem) {
                     tag = ToolTipFactory.getCustomTooltipItem(itemStack);
-                } else if(hasCustomBlock) {
+                } else if (hasCustomBlock) {
                     tag = ToolTipFactory.getCustomTooltipBlock(((ItemBlock) itemStack.getItem()).getBlockState());
                 }
                 String name = TooltipUtils.parseName(itemStack.getItem().getName());
@@ -71,7 +71,7 @@ public abstract class ItemCatalogMixin {
                 TooltipUtils.getStage().addActor(cosmicTooltips$tooltip);
             }
 
-            if(cosmicTooltips$tooltip != null) {
+            if (cosmicTooltips$tooltip != null) {
                 cosmicTooltips$tooltip.setPosition(TooltipUtils.getPosition());
             }
         }

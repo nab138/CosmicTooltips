@@ -22,7 +22,8 @@ public abstract class ItemSlotWidgetMixin extends Stack {
     @Shadow
     protected abstract boolean isHoveredOver();
 
-    @Shadow public abstract ItemSlot getItemSlot();
+    @Shadow
+    public abstract ItemSlot getItemSlot();
 
     @Unique
     private TooltipUIElement cosmicTooltips$tooltip;
@@ -31,7 +32,7 @@ public abstract class ItemSlotWidgetMixin extends Stack {
     private String cosmicTooltips$rawId = "";
 
     @Unique
-    boolean cosmicTooltips$wasAdvanced = false;
+    int cosmicTooltips$prevAdvanced = 0;
 
     @Unique
     boolean cosmicTooltips$wasBritish = false;
@@ -45,22 +46,22 @@ public abstract class ItemSlotWidgetMixin extends Stack {
             }
             return;
         } else {
-            boolean shouldBeAdvanced = TooltipUtils.shouldBeAdvanced();
+            int shouldBeAdvanced = TooltipUtils.advanced;
             ItemStack itemStack = this.getItemSlot().getItemStack();
             boolean hasCustomItem = itemStack.getItem() instanceof IModItem && ToolTipFactory.hasCustomTooltipItem(itemStack);
             boolean hasCustomBlock = itemStack.getItem() instanceof ItemBlock && ToolTipFactory.hasCustomTooltipBlock((ItemBlock) itemStack.getItem());
-            if (hasCustomItem || hasCustomBlock  || !cosmicTooltips$rawId.equals(itemStack.getItem().getID()) || cosmicTooltips$wasAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
-                cosmicTooltips$wasAdvanced = shouldBeAdvanced;
+            if (hasCustomItem || hasCustomBlock || !cosmicTooltips$rawId.equals(itemStack.getItem().getID()) || cosmicTooltips$prevAdvanced != shouldBeAdvanced || cosmicTooltips$wasBritish != TooltipUtils.british) {
+                cosmicTooltips$prevAdvanced = shouldBeAdvanced;
                 cosmicTooltips$wasBritish = TooltipUtils.british;
                 cosmicTooltips$rawId = itemStack.getItem().getID();
-                if(cosmicTooltips$rawId == null) {
+                if (cosmicTooltips$rawId == null) {
                     cosmicTooltips$rawId = "";
                     return;
                 }
                 String tag = null;
-                if(hasCustomItem) {
+                if (hasCustomItem) {
                     tag = ToolTipFactory.getCustomTooltipItem(itemStack);
-                } else if(hasCustomBlock) {
+                } else if (hasCustomBlock) {
                     tag = ToolTipFactory.getCustomTooltipBlock(((ItemBlock) itemStack.getItem()).getBlockState());
                 }
                 String name = TooltipUtils.parseName(itemStack.getItem().getName());
@@ -75,9 +76,9 @@ public abstract class ItemSlotWidgetMixin extends Stack {
         }
     }
 
-    @Inject(method="drawTooltip", at=@At("HEAD"), cancellable = true)
+    @Inject(method = "drawTooltip", at = @At("HEAD"), cancellable = true)
     private void dontDrawTooltip(Batch batch, CallbackInfo ci) {
-        if(cosmicTooltips$tooltip != null && this.isHoveredOver()) cosmicTooltips$tooltip.draw(batch, 1);
+        if (cosmicTooltips$tooltip != null && this.isHoveredOver()) cosmicTooltips$tooltip.draw(batch, 1);
         ci.cancel();
     }
 }

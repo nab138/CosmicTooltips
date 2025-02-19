@@ -13,7 +13,8 @@ public class ToolTipFactory {
     public static final HashMap<String, ITooltipBlock> initializeToolTipsBlocks = new HashMap<>();
     List<ITooltip> newToolTips = new ArrayList<>();
 
-    public ToolTipFactory() {}
+    public ToolTipFactory() {
+    }
 
     public static boolean hasCustomTooltipItem(ItemStack itemStack) {
         return initializeToolTipsItems.containsKey(itemStack.getItem().getID().split("\\[")[0]);
@@ -31,13 +32,13 @@ public class ToolTipFactory {
         return initializeToolTipsBlocks.get(blockState.getItem().getID().split("\\[")[0]).getTooltipText(blockState);
     }
 
-    public void loadCustomTooltip () {
-        for(ITooltip tooltip : newToolTips){
-            if(tooltip instanceof ITooltipItem tooltipItem)  {
-                initializeToolTipsItems.put(tooltipItem.getItemID(),tooltipItem);
+    public void loadCustomTooltip() {
+        for (ITooltip tooltip : newToolTips) {
+            if (tooltip instanceof ITooltipItem tooltipItem) {
+                initializeToolTipsItems.put(tooltipItem.getItemID(), tooltipItem);
                 continue;
             }
-            if(tooltip instanceof ITooltipBlock tooltipBlock) {
+            if (tooltip instanceof ITooltipBlock tooltipBlock) {
                 initializeToolTipsBlocks.put(tooltipBlock.getBlockID(), tooltipBlock);
             }
         }

@@ -26,28 +26,30 @@ public class TooltipUIElement extends Table {
 
     public void updateText(String name, String id, String other) {
         Label nameLabel = new Label(name, GameStyles.styleText);
-        this.add(nameLabel).expand().fill().left().pad(padding).padTop(fontHeight + padding).padBottom(0);
+        this.add(nameLabel).expand().fill().left().pad(padding).padTop(fontHeight + padding).padBottom(padding);
 
-        row();
 
-        Label idLabel = new Label(id, intermediateText);
-        this.add(idLabel).expand().fill().left().pad(padding).padTop(fontHeight).padBottom(other == null ? padding : 0);
+        if (id != null) {
+            row();
+            Label idLabel = new Label(id, intermediateText);
+            this.add(idLabel).left().expand().fill().pad(padding).padTop(fontHeight - padding);
+        }
 
         if (other != null) {
             row();
             Label otherLabels = new Label(other, advancedText);
-            this.add(otherLabels).left().expand().fill().pad(padding).padTop(fontHeight);
+            this.add(otherLabels).left().expand().fill().pad(padding).padTop(fontHeight - padding);
         }
 
         updateDims();
     }
 
     public void setPosition(Vector2 position) {
-        if(position.x + this.getPrefWidth() > TooltipUtils.getStage().getWidth()) {
+        if (position.x + this.getPrefWidth() > TooltipUtils.getStage().getWidth()) {
             position.x -= this.getPrefWidth() - 8;
         }
 
-        if(position.y + this.getPrefHeight() > TooltipUtils.getStage().getHeight()) {
+        if (position.y + this.getPrefHeight() > TooltipUtils.getStage().getHeight()) {
             position.y -= this.getPrefHeight() - 8;
         }
 

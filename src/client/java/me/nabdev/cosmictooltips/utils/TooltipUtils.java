@@ -12,7 +12,7 @@ public class TooltipUtils {
 
     public static boolean british = false;
 
-    public static boolean advanced = false;
+    public static int advanced = 0;
 
     public static Vector2 getPosition() {
         float x = Gdx.input.getX();
@@ -26,27 +26,33 @@ public class TooltipUtils {
         return british ? prettyNameRaw : prettyNameRaw.replace("inium", "inum");
     }
 
-    public static String parseId (String id) {
+    public static String parseId(String id) {
+        if (advanced < 1) return null;
+        return parseIdForced(id);
+    }
+
+    public static String parseIdForced(String id) {
         return id.split("\\[")[0];
     }
-    public static String parseOther(String id, String tag){
+
+
+    public static String parseOther(String id, String tag) {
+        if (advanced < 2) {
+            return tag;
+        }
         String[] split = id.split("\\[");
         String[] data = null;
         if (split.length > 1) data = split[1].substring(0, split[1].length() - 1).split(",");
         String result = (data != null ? Strings.join(data, "\n") : "");
-        if(tag != null){
-            if(result != "") result += "\n";
+        if (tag != null) {
+            if (result != "") result += "\n";
             result += tag;
         }
-        if(result.isEmpty()) return null;
+        if (result.isEmpty()) return null;
         return result;
     }
 
-    public static boolean shouldBeAdvanced() {
-        return advanced;
-    }
-
-    public static Stage getStage(){
+    public static Stage getStage() {
         return ((IStageGetter) GameState.IN_GAME).cosmicTooltips$getStage();
     }
 }

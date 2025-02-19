@@ -12,7 +12,7 @@ public class CosmicToolTips implements ClientModInitializer {
     public void onInit() {
         PuzzleEntrypointUtil.invoke("tooltip", ToolTipFactory.class, ToolTipFactory::loadCustomTooltip);
         GameSetting.loadSettings();
-        TooltipUtils.advanced = (boolean) GameSetting.getSetting("advancedTooltips", null, false);
+        TooltipUtils.advanced = ((Number) GameSetting.getSetting("advancedTooltipMode", null, 0)).intValue();
         TooltipUtils.british = (boolean) GameSetting.getSetting("britishTooltips", null, false);
     }
 }
