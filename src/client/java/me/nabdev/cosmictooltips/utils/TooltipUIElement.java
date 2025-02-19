@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Align;
 import finalforeach.cosmicreach.ui.GameStyles;
 
 import static finalforeach.cosmicreach.ui.GameStyles.menuButton9Patch;
@@ -15,9 +16,11 @@ public class TooltipUIElement extends Table {
     private static final int fontHeight = 16;
     Label.LabelStyle intermediateText = new Label.LabelStyle(GameStyles.styleText.font, Color.LIGHT_GRAY);
     Label.LabelStyle advancedText = new Label.LabelStyle(GameStyles.styleText.font, Color.DARK_GRAY);
+    private final boolean centered;
 
     public TooltipUIElement(String name, String id, String other, Vector2 position) {
         super();
+        centered = false;
         updateText(name, id, other);
         setBackground(new NinePatchDrawable(menuButton9Patch));
         setPosition(position.x, position.y);
@@ -25,6 +28,7 @@ public class TooltipUIElement extends Table {
 
     public TooltipUIElement(String name, String id, String other, Stage stage) {
         super();
+        centered = true;
         updateText(name, id, other);
         setBackground(new NinePatchDrawable(menuButton9Patch));
         float x = (stage.getWidth() - this.getPrefWidth()) / 2;
@@ -35,16 +39,19 @@ public class TooltipUIElement extends Table {
 
     public void updateText(String name, String id, String other) {
         Label nameLabel = new Label(name, GameStyles.styleText);
-        this.add(nameLabel).left().pad(TooltipUtils.padding).padTop(fontHeight + TooltipUtils.padding).padBottom(0);
+        if(centered) nameLabel.setAlignment(Align.center);
+        this.add(nameLabel).expand().fill().left().pad(TooltipUtils.padding).padTop(fontHeight + TooltipUtils.padding).padBottom(0);
 
         row();
 
         Label idLabel = new Label(id, intermediateText);
-        this.add(idLabel).left().pad(TooltipUtils.padding).padTop(fontHeight).padBottom(other == null ? TooltipUtils.padding : 0);
+        if(centered) idLabel.setAlignment(Align.center);
+        this.add(idLabel).expand().fill().left().pad(TooltipUtils.padding).padTop(fontHeight).padBottom(other == null ? TooltipUtils.padding : 0);
 
         if (other != null) {
             row();
             Label otherLabels = new Label(other, advancedText);
+            if(centered) otherLabels.setAlignment(Align.center);
             this.add(otherLabels).left().expand().fill().pad(TooltipUtils.padding).padTop(fontHeight);
         }
 
