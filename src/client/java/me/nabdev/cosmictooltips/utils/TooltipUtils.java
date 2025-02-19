@@ -7,9 +7,8 @@ import finalforeach.cosmicreach.gamestates.GameState;
 import joptsimple.internal.Strings;
 
 public class TooltipUtils {
-    public static int padding = 6;
-
-    private static long lastHotbarTime = 0;
+    public static final int padding = 6;
+    public static final int fontHeight = 16;
 
     public static boolean british = false;
 
@@ -23,10 +22,6 @@ public class TooltipUtils {
     }
 
 
-    public static long getHotbarTime() {
-        return lastHotbarTime;
-    }
-
     public static String parseName(String prettyNameRaw) {
         return british ? prettyNameRaw : prettyNameRaw.replace("inium", "inum");
     }
@@ -38,7 +33,11 @@ public class TooltipUtils {
         String[] split = id.split("\\[");
         String[] data = null;
         if (split.length > 1) data = split[1].substring(0, split[1].length() - 1).split(",");
-        String result = (data != null ? Strings.join(data, "\n") : "") + (tag != null ? "\n" + tag : "");
+        String result = (data != null ? Strings.join(data, "\n") : "");
+        if(tag != null){
+            if(result != "") result += "\n";
+            result += tag;
+        }
         if(result.isEmpty()) return null;
         return result;
     }

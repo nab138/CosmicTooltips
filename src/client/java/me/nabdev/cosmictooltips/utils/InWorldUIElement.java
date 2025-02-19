@@ -5,16 +5,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.utils.Align;
 import finalforeach.cosmicreach.items.Item;
 import finalforeach.cosmicreach.ui.GameStyles;
 
 import static finalforeach.cosmicreach.ui.GameStyles.menuButton9Patch;
+import static me.nabdev.cosmictooltips.utils.TooltipUtils.fontHeight;
+import static me.nabdev.cosmictooltips.utils.TooltipUtils.padding;
 
 
 public class InWorldUIElement extends Table
 {
-    private static final int fontHeight = 16;
     Label.LabelStyle intermediateText = new Label.LabelStyle(GameStyles.styleText.font, Color.LIGHT_GRAY);
     Label.LabelStyle advancedText = new Label.LabelStyle(GameStyles.styleText.font, Color.DARK_GRAY);
 
@@ -30,23 +30,23 @@ public class InWorldUIElement extends Table
 
     private void updateText(Item item, String name, String id, String other) {
         ItemImage itemImage = new ItemImage(item);
-        this.add(itemImage).width(fontHeight * 2 + TooltipUtils.padding).height(fontHeight * 2+ TooltipUtils.padding).left().top().padTop(TooltipUtils.padding * 0.5f);
+        this.add(itemImage).width(fontHeight * 2 + padding).height(fontHeight * 2+ padding).left().top().padTop(padding * 0.5f);
 
 
         Table nameIdTable = new Table();
         Label nameLabel = new Label(name, GameStyles.styleText);
-        nameIdTable.add(nameLabel).expand().fill().padTop(fontHeight + TooltipUtils.padding).padBottom(0);
+        nameIdTable.add(nameLabel).expand().fill().padTop(fontHeight + padding).padBottom(0);
         nameIdTable.row();
         Label idLabel = new Label(id, intermediateText);
 
         nameIdTable.add(idLabel).left().padTop(fontHeight);
-        this.add(nameIdTable).expand().fill().left().padLeft(TooltipUtils.padding);
+        this.add(nameIdTable).expand().fill().left().padLeft(padding);
 
         row();
 
         if (other != null) {
             Label otherLabels = new Label(other, advancedText);
-            this.add(otherLabels).colspan(2).left().expand().fill().pad(TooltipUtils.padding).padTop(fontHeight);
+            this.add(otherLabels).colspan(2).left().expand().fill().pad(padding).padTop(fontHeight);
         }
 
         this.setSize(this.getPrefWidth(), this.getPrefHeight());

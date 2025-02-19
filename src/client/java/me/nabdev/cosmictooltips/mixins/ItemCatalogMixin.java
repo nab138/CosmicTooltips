@@ -1,7 +1,5 @@
 package me.nabdev.cosmictooltips.mixins;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.puzzle.game.items.IModItem;

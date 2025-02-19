@@ -8,10 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import finalforeach.cosmicreach.ui.GameStyles;
 
 import static finalforeach.cosmicreach.ui.GameStyles.menuButton9Patch;
+import static me.nabdev.cosmictooltips.utils.TooltipUtils.fontHeight;
+import static me.nabdev.cosmictooltips.utils.TooltipUtils.padding;
 
 
 public class TooltipUIElement extends Table {
-    private static final int fontHeight = 16;
     Label.LabelStyle intermediateText = new Label.LabelStyle(GameStyles.styleText.font, Color.LIGHT_GRAY);
     Label.LabelStyle advancedText = new Label.LabelStyle(GameStyles.styleText.font, Color.DARK_GRAY);
 
@@ -25,17 +26,17 @@ public class TooltipUIElement extends Table {
 
     public void updateText(String name, String id, String other) {
         Label nameLabel = new Label(name, GameStyles.styleText);
-        this.add(nameLabel).expand().fill().left().pad(TooltipUtils.padding).padTop(fontHeight + TooltipUtils.padding).padBottom(0);
+        this.add(nameLabel).expand().fill().left().pad(padding).padTop(fontHeight + padding).padBottom(0);
 
         row();
 
         Label idLabel = new Label(id, intermediateText);
-        this.add(idLabel).expand().fill().left().pad(TooltipUtils.padding).padTop(fontHeight).padBottom(other == null ? TooltipUtils.padding : 0);
+        this.add(idLabel).expand().fill().left().pad(padding).padTop(fontHeight).padBottom(other == null ? padding : 0);
 
         if (other != null) {
             row();
             Label otherLabels = new Label(other, advancedText);
-            this.add(otherLabels).left().expand().fill().pad(TooltipUtils.padding).padTop(fontHeight);
+            this.add(otherLabels).left().expand().fill().pad(padding).padTop(fontHeight);
         }
 
         updateDims();
