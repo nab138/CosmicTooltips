@@ -2,7 +2,6 @@ package me.nabdev.cosmictooltips.mixins;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import finalforeach.cosmicreach.BlockSelection;
 import finalforeach.cosmicreach.blocks.BlockState;
@@ -11,7 +10,7 @@ import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.InGame;
 import finalforeach.cosmicreach.settings.GameSetting;
 import me.nabdev.cosmictooltips.utils.IStageGetter;
-import me.nabdev.cosmictooltips.utils.TooltipUIElement;
+import me.nabdev.cosmictooltips.utils.InWorldUIElement;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,7 +26,7 @@ public class InGameMixin extends GameState implements IStageGetter {
     public BlockSelection blockSelection;
 
     @Unique
-    private TooltipUIElement cosmicTooltips$tooltip;
+    private InWorldUIElement cosmicTooltips$tooltip;
 
     @Unique
     private String cosmicTooltips$rawId;
@@ -58,7 +57,7 @@ public class InGameMixin extends GameState implements IStageGetter {
             cosmicTooltips$tooltip.remove();
             cosmicTooltips$tooltip = null;
         }
-        cosmicTooltips$tooltip = new TooltipUIElement(name, id, others, stage);
+        cosmicTooltips$tooltip = new InWorldUIElement(result.getItem(), name, id, others, stage);
         this.stage.addActor(cosmicTooltips$tooltip);
     }
 

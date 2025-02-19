@@ -3,7 +3,6 @@ package me.nabdev.cosmictooltips.mixins;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.github.puzzle.game.items.IModItem;
-import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.ItemBlock;
 import finalforeach.cosmicreach.items.ItemSlot;
 import finalforeach.cosmicreach.items.ItemStack;

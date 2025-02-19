@@ -1,14 +1,11 @@
 package me.nabdev.cosmictooltips.mixins;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.puzzle.game.items.IModItem;
 import com.llamalad7.mixinextras.sugar.Local;
-import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.items.ItemBlock;
 import finalforeach.cosmicreach.items.ItemCatalog;
 import finalforeach.cosmicreach.items.ItemStack;
@@ -35,9 +32,6 @@ public abstract class ItemCatalogMixin {
 
     @Unique
     boolean cosmicTooltips$wasAdvanced = false;
-
-    @Unique
-    private Batch cosmicTooltips$batch = new SpriteBatch();
 
     @Unique
     boolean cosmicTooltips$wasBritish = false;
