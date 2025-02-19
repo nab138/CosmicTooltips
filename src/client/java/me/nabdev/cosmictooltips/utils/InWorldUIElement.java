@@ -45,7 +45,7 @@ public class InWorldUIElement extends Table {
 
         if (other != null) {
             Label otherLabels = new Label(other, advancedText);
-            this.add(otherLabels).colspan(2).left().expand().fill().pad(padding).padTop(fontHeight);
+            this.add(otherLabels).colspan(2).left().expand().fill().pad(padding).padTop(fontHeight - padding);
         }
 
         this.setSize(this.getPrefWidth(), this.getPrefHeight());
