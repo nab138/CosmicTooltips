@@ -2,9 +2,9 @@ package me.nabdev.cosmictooltips.mixins;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import finalforeach.cosmicreach.items.Hotbar;
 import finalforeach.cosmicreach.items.ItemSlot;
 import finalforeach.cosmicreach.ui.GameStyles;
+import finalforeach.cosmicreach.ui.Hotbar;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

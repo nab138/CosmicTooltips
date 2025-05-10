@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import finalforeach.cosmicreach.ui.GameStyles;
+import finalforeach.cosmicreach.ui.widgets.ItemStackWidget;
 
 import static finalforeach.cosmicreach.ui.GameStyles.menuButton9Patch;
 import static me.nabdev.cosmictooltips.utils.TooltipUtils.fontHeight;
@@ -16,13 +17,19 @@ public class TooltipUIElement extends Table {
     Label.LabelStyle intermediateText = new Label.LabelStyle(GameStyles.styleText.font, Color.LIGHT_GRAY);
     Label.LabelStyle advancedText = new Label.LabelStyle(GameStyles.styleText.font, Color.DARK_GRAY);
 
-    public TooltipUIElement(String name, String id, String other, Vector2 position) {
+    public ItemStackWidget myStack;
+
+    public TooltipUIElement(String name, String id, String other, Vector2 position, ItemStackWidget stack) {
         super();
         updateText(name, id, other);
         setBackground(new NinePatchDrawable(menuButton9Patch));
         setPosition(position.x, position.y);
+        this.myStack = stack;
     }
 
+    public boolean shouldBeHidden() {
+        return myStack == null || !myStack.isHovered || !myStack.isVisible();
+    }
 
     public void updateText(String name, String id, String other) {
         Label nameLabel = new Label(name, GameStyles.styleText);

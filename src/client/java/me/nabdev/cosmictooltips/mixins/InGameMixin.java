@@ -8,7 +8,7 @@ import finalforeach.cosmicreach.blocks.BlockState;
 import finalforeach.cosmicreach.chat.Chat;
 import finalforeach.cosmicreach.gamestates.GameState;
 import finalforeach.cosmicreach.gamestates.InGame;
-import finalforeach.cosmicreach.settings.GameSetting;
+import finalforeach.cosmicreach.settings.types.GameSetting;
 import me.nabdev.cosmictooltips.utils.IStageGetter;
 import me.nabdev.cosmictooltips.utils.InWorldUIElement;
 import me.nabdev.cosmictooltips.utils.TooltipUtils;
@@ -85,6 +85,13 @@ public class InGameMixin extends GameState implements IStageGetter {
                 };
                 Chat.MAIN_CLIENT_CHAT.addMessage(null, "[CosmicTooltips] " + msg);
             }
+        }
+    }
+
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lfinalforeach/cosmicreach/ui/widgets/ContainerSlotWidget;drawItemCountWithDropShadow(Lcom/badlogic/gdx/graphics/g2d/Batch;FFLcom/badlogic/gdx/graphics/Color;)V", shift = At.Shift.BEFORE))
+    private void renderTooltip(CallbackInfo ci) {
+        if(TooltipUtils.curTooltip != null && GameState.currentGameState == GameState.IN_GAME){
+            TooltipUtils.curTooltip.draw(stage.getBatch(), 1);
         }
     }
 

@@ -14,6 +14,8 @@ public class TooltipUtils {
 
     public static int advanced = 0;
 
+    public static TooltipUIElement curTooltip = null;
+
     public static Vector2 getPosition() {
         float x = Gdx.input.getX();
         float y = Gdx.input.getY();
@@ -45,7 +47,7 @@ public class TooltipUtils {
         if (split.length > 1) data = split[1].substring(0, split[1].length() - 1).split(",");
         String result = (data != null ? Strings.join(data, "\n") : "");
         if (tag != null) {
-            if (result != "") result += "\n";
+            if (!result.isEmpty()) result += "\n";
             result += tag;
         }
         if (result.isEmpty()) return null;
